@@ -1,11 +1,10 @@
+using Microsoft.AspNetCore.Http.Connections;
 using WebApp.BFF.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
@@ -31,10 +30,18 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseCors("CorsPolicy");
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/hub");
+    endpoints.MapHub<ChatHub>("/hub", options =>
+    {
+        options.Transports =
+               HttpTransportType.WebSockets |
+               HttpTransportType.LongPolling;
+    });
 });
 
 app.Run();
