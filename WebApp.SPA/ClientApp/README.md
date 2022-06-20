@@ -1,33 +1,29 @@
-# chatius (chatius)
+# clientapp
 
-A project to experiment with signalR
-
-## Install the dependencies
-```bash
-yarn
-# or
+## Project setup
+```
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
+### Compiles and hot-reloads for development
+```
+npm run serve
 ```
 
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
+### Compiles and minifies for production
+```
+npm run build
 ```
 
-
-
-### Build the app for production
-```bash
-quasar build
+### Run your unit tests
+```
+npm run test:unit
 ```
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+### Run your end-to-end tests
+```
+npm run test:e2e
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
