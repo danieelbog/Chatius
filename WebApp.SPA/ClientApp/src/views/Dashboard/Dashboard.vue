@@ -1,16 +1,14 @@
 <template>
-  <div id="app">
-    <default-layout></default-layout>
-  </div>
+  <div class="bg-warning">HELLO WORLD</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import DefaultLayout from "../components/Layouts/main-layout.vue";
+import ChatBox from "../../components/ChatBox/chat-box.vue";
 
 export default defineComponent({
   components: {
-    "default-layout": DefaultLayout,
+    "chat-box": ChatBox,
   },
 });
 </script>

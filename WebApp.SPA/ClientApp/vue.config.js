@@ -3,7 +3,6 @@
 // https://cli.vuejs.org/guide/webpack.html#chaining-advanced
 
 const { defineConfig } = require("@vue/cli-service");
-const path = require("path");
 
 module.exports = defineConfig({
     transpileDependencies: true,

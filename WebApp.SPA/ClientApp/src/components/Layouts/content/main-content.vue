@@ -1,20 +1,7 @@
 <template>
-    <div class="position-sticky row g-0">
-        <div class="col-9">
-            <router-view />
-        </div>
-        <div class="col-3">
-            <main-sidebar></main-sidebar>
-        </div>
-    </div>
+  <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bg-danger" role="main">
+    <main>
+      <router-view> </router-view>
+    </main>
+  </div>
 </template>
-
-<script lang="ts">
-    import { defineComponent } from '@vue/composition-api';
-    import MainSidebar from '../sidebars/main-sidebar.vue';
-    export default defineComponent({
-        components: {
-            "main-sidebar": MainSidebar
-        }
-    });
-</script>

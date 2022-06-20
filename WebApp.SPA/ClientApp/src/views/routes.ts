@@ -3,11 +3,11 @@ import { RouteConfig } from "vue-router";
 const routes: Array<RouteConfig> = [
     {
         path: "/",
-        name: "Chatius",
+        name: "Dashboard",
         meta: {
-            pageTitle: "Chatius",
+            pageTitle: "Chatius | Dashboard",
         },
-        component: () => import(/* webpackChunkName: "main" */ "../views/Main/Main.vue"),
+        component: () => import(/* webpackChunkName: "dahsboard" */ "./Dashboard/Dashboard.vue"),
     },
 ];
 

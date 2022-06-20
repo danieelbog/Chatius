@@ -3,12 +3,13 @@ import App from "../App.vue";
 import AppError from "../App-Error.vue";
 
 import { pinia } from "./external/pinia";
-import { initRouter } from "../../router/index";
+import { router } from "../../router/index";
 import { initBootstrapVue } from "./vue/vue-bootstrap"
+
+import "../../assets/styles/material-icons/material-icons.scss";
 
 export async function initApplication() {
     try {
-        var router = initRouter("./", "Chatius");
         initBootstrapVue(Vue);
 
         Vue.config.productionTip = false;
