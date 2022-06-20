@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import MainSidebar from '../sidebars/main-sidebar.vue';
-export default defineComponent({
-    components: {
-        "main-sidebar": MainSidebar
-    }
-});
+    import { defineComponent } from '@vue/composition-api';
+    import MainSidebar from '../sidebars/main-sidebar.vue';
+    export default defineComponent({
+        components: {
+            "main-sidebar": MainSidebar
+        }
+    });
 </script>

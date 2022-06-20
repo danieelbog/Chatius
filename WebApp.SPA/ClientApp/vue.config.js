@@ -8,7 +8,7 @@ const path = require("path");
 module.exports = defineConfig({
     transpileDependencies: true,
     chainWebpack: (config) => {
-         config.entry("app").clear();
-         config.entry("app").add("./src/app/main.ts").end();
+        config.entry("app").clear();
+        config.entry("app").add("./src/app/main.ts").end();
     }
 });

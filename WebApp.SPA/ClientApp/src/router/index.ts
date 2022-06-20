@@ -1,17 +1,24 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import Vue from "vue";
+import VueRouter from "vue-router";
+import { routes } from "../views/routes";
+Vue.use(VueRouter);
 
-const routes: Array<RouteRecordRaw> = [
-	{
-		path: "/",
-		name: "main",
-		component: () => import(/* webpackChunkName: "main" */ "../views/Main.vue"),
-	},
-];
+var router = null as VueRouter | null;
+export { router };
 
-const router = createRouter({
-	history: createWebHistory(process.env.BASE_URL),
-	routes,
-});
+export function initRouter(baseUrl: string, pageTitle: string): VueRouter {
+    if (router) return router;
 
-export default router;
+    var instance = new VueRouter({
+        mode: "history",
+        base: baseUrl,
+        routes: routes,        
+    });
+
+    instance.beforeEach(async (to, from, next) => {
+        document.title = pageTitle;
+    });
+
+    router = instance;
+    return instance;
+}

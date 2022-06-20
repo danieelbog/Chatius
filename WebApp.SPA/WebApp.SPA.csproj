@@ -7,13 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
+    <Compile Remove="ClientApp\newapp\**" />
+    <Content Remove="ClientApp\newapp\**" />
+    <EmbeddedResource Remove="ClientApp\newapp\**" />
+    <None Remove="ClientApp\newapp\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\app\bootstrap-vue\" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
