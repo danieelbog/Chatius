@@ -10,6 +10,7 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
     document.title = to.meta?.pageTitle;
+    next();
 });
 
 export { router }

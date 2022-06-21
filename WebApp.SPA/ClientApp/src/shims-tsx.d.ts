@@ -14,3 +14,9 @@ declare global {
         }
     }
 }
+
+declare module "vue/types/vue" {
+    interface Vue {
+        $httpMock: MockAdapter;
+    }
+}
