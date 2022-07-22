@@ -1,3 +1,3 @@
 <template>
-  <div class="col-12 col-md-3 col-xl-2 bd-sidebar bg-warning"></div>
+  <div class="col-12 col-md-3 col-xl-2 bd-sidebar"></div>
 </template>
