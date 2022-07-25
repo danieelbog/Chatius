@@ -1,7 +1,5 @@
 <template>
-  <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5" role="main">
-    <main>
-      <router-view></router-view>
-    </main>
-  </div>
+	<main class="shadow col ms-3 me-3 p-3">
+		<router-view></router-view>
+	</main>
 </template>
