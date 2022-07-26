@@ -10,26 +10,54 @@ import { defineComponent, onMounted, onBeforeUnmount, ref, watch } from "@vue/co
 export default defineComponent({
 	setup(props, context) {
 		const visibleWrapper = ref(null as unknown as HTMLElement);
-		const contnetIsVisible = ref(null as boolean);
+		const contnetIsPartiallyVisible = ref(null as unknown as boolean);
+		const contnetIsFullyVisible = ref(null as unknown as boolean);
 
 		onMounted(() => {
-			isVisible();
-			window.addEventListener("scroll", isVisible);
+			setVisibility();
+			window.addEventListener("scroll", setVisibility);
 		});
 		onBeforeUnmount(() => {
-			window.removeEventListener("scroll", isVisible);
+			window.removeEventListener("scroll", setVisibility);
 		});
 
 		watch(
-			() => contnetIsVisible.value,
+			() => contnetIsPartiallyVisible.value,
 			(newVal: boolean, oldValue: boolean) => {
-				console.log(newVal);
-				if (newVal != oldValue) context.emit("isVisible", contnetIsVisible.value);
+				if (newVal != oldValue) context.emit("isPartiallyVisible", contnetIsPartiallyVisible.value);
 			},
 		);
 
-		function isVisible() {
-			contnetIsVisible.value = visibleWrapper.value && visibleWrapper.value.scrollHeight >= window.scrollY;
+		watch(
+			() => contnetIsFullyVisible.value,
+			(newVal: boolean, oldValue: boolean) => {
+				if (newVal != oldValue) context.emit("isFullyVisible", contnetIsFullyVisible.value);
+			},
+		);
+
+		function setVisibility() {
+			let rect = visibleWrapper.value.getBoundingClientRect();
+			contnetIsPartiallyVisible.value = elementIsPartialyVisible(rect);
+			contnetIsFullyVisible.value = elementIsFullyVisible(rect) && contnetIsPartiallyVisible.value;
+		}
+
+		function elementIsPartialyVisible(rect: DOMRect): boolean {
+			let isTopInViewPort = rect.top >= visibleWrapper.value.offsetTop * -1;
+			let isLeftInViewPort = rect.left >= 0;
+
+			return isTopInViewPort && isLeftInViewPort;
+		}
+
+		function elementIsFullyVisible(rect: DOMRect): boolean {
+			let viewPortRight = window.innerWidth || document.documentElement.clientWidth;
+			let viewPortBottom = window.innerHeight || document.documentElement.clientHeight;
+
+			let isTopInViewPort = rect.top >= 0;
+			let isLeftInViewPort = rect.left >= 0;
+			let isBottomInViewPort = rect.bottom <= viewPortBottom;
+			let letisRightInViewPort = rect.right <= viewPortRight;
+
+			return isBottomInViewPort && letisRightInViewPort && isTopInViewPort && isLeftInViewPort;
 		}
 
 		return {

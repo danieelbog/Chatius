@@ -7,6 +7,7 @@
 				</div>
 			</template>
 		</visible-wrapper>
+
 		<sticky-wrapper :distanceFromTop="75">
 			<template v-slot:content>
 				<div class="p-3 sticky-top">
