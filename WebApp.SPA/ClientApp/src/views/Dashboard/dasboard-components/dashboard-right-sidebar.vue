@@ -1,5 +1,5 @@
 <template>
-	<div class="col-0 col-md-3">
+	<div class="d-none d-lg-block col-md-3">
 		<div class="pt-3 pb-3 pl-0 pr-0">
 			<card-recommendation></card-recommendation>
 		</div>

@@ -16,9 +16,11 @@ export default defineComponent({
 		onMounted(() => {
 			setVisibility();
 			window.addEventListener("scroll", setVisibility);
+			window.addEventListener("resize", setVisibility);
 		});
 		onBeforeUnmount(() => {
 			window.removeEventListener("scroll", setVisibility);
+			window.addEventListener("resize", setVisibility);
 		});
 
 		watch(
@@ -43,7 +45,7 @@ export default defineComponent({
 
 		function elementIsPartialyVisible(rect: DOMRect): boolean {
 			let isTopInViewPort = rect.top >= visibleWrapper.value.offsetTop * -1;
-			let isLeftInViewPort = rect.left >= 0;
+			let isLeftInViewPort = rect.left >= 0.1;
 
 			return isTopInViewPort && isLeftInViewPort;
 		}
@@ -52,8 +54,8 @@ export default defineComponent({
 			let viewPortRight = window.innerWidth || document.documentElement.clientWidth;
 			let viewPortBottom = window.innerHeight || document.documentElement.clientHeight;
 
-			let isTopInViewPort = rect.top >= 0;
-			let isLeftInViewPort = rect.left >= 0;
+			let isTopInViewPort = rect.top >= 0.1;
+			let isLeftInViewPort = rect.left >= 0.1;
 			let isBottomInViewPort = rect.bottom <= viewPortBottom;
 			let letisRightInViewPort = rect.right <= viewPortRight;
 

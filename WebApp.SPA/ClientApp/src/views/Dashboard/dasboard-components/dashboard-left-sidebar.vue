@@ -1,5 +1,5 @@
 <template>
-	<div class="col-0 col-md-3">
+	<div class="d-none d-lg-block col-md-3">
 		<visible-wrapper>
 			<template v-slot:content>
 				<div class="p-3">
