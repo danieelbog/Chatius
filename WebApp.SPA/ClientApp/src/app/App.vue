@@ -1,16 +1,11 @@
 <template>
-	<div id="app">
-		<default-layout></default-layout>
-	</div>
+	<main id="app">
+		<router-view></router-view>
+	</main>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import DefaultLayout from "../components/Layouts/main-layout.vue";
 
-export default defineComponent({
-	components: {
-		"default-layout": DefaultLayout,
-	},
-});
+export default defineComponent({});
 </script>

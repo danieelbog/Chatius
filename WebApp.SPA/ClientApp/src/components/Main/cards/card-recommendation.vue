@@ -1,24 +1,17 @@
 <template>
-	<div class="card" style="width: 18rem">
-		<img class="card-img-top" src="" alt="Card image cap" />
+	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">Card title</h5>
-			<div>{{ text }} Daniel Is here</div>
+			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
 			<a href="#" class="btn btn-primary">Go somewhere</a>
 		</div>
 	</div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
-	props: {
-		text: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props, context) {},
+	setup() {},
 });
 </script>

@@ -1,24 +1,38 @@
 <template>
-	<infinite-scroll @list-at-bottom="loadGigs()">
-		<template v-slot:content>
-			<div v-for="gig in gigs" v-bind:key="gig">
-				<gig :text="gig"></gig>
-			</div>
-		</template>
-	</infinite-scroll>
+	<div>
+		<main-navbar></main-navbar>
+		<infinite-scroller @pageAtBottom="loadGigs()">
+			<template v-slot:content>
+				<div class="container mt-5">
+					<div class="row dashboard-row">
+						<dashboard-left-sidebar></dashboard-left-sidebar>
+						<dashboard-main-conent :gigs="gigs"></dashboard-main-conent>
+						<dashboard-right-sidebar></dashboard-right-sidebar>
+					</div>
+				</div>
+			</template>
+		</infinite-scroller>
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "@vue/composition-api";
+import { defineComponent, onMounted, ref, watch } from "@vue/composition-api";
+import InfiniteScroller from "../../components/Layouts/infinite-scroller/infinite-scroller.vue";
+import DashboardLeftSidebar from "./dasboard-components/dashboard-left-sidebar.vue";
+import DashboardMainConent from "./dasboard-components/dashboard-main-conent.vue";
+import DashboardRightSidebar from "./dasboard-components/dashboard-right-sidebar.vue";
 import ChatBox from "../../components/ChatBox/chat-box.vue";
-import InfiniteComponent from "../../components/Main/infinite-content/inifinite-content.vue";
-import Gig from "../../components/Main/gig/gig.vue";
+import MainNavbar from "../../components/Layouts/navbars/main-navbar.vue";
+import "./dashboard.scss";
 
 export default defineComponent({
 	components: {
-		"chat-box": ChatBox,
-		"infinite-scroll": InfiniteComponent,
-		gig: Gig,
+		DashboardLeftSidebar,
+		DashboardMainConent,
+		DashboardRightSidebar,
+		InfiniteScroller,
+		ChatBox,
+		MainNavbar,
 	},
 
 	setup(props, context) {
@@ -30,9 +44,8 @@ export default defineComponent({
 		});
 
 		function loadGigs() {
-			console.log("load gigs triggered");
 			currentPage.value++;
-			for (var i = 0; i < 210; i++) {
+			for (var i = 0; i < 15; i++) {
 				gigs.value.push("Item " + nextItem.value++);
 			}
 		}
