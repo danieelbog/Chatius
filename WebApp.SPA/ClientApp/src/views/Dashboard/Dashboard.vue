@@ -23,6 +23,7 @@ import DashboardMainConent from "./dasboard-components/dashboard-main-conent.vue
 import DashboardRightSidebar from "./dasboard-components/dashboard-right-sidebar.vue";
 import ChatBox from "../../components/ChatBox/chat-box.vue";
 import MainNavbar from "../../components/Layouts/navbars/main-navbar.vue";
+import { GigDto } from "../../interfaces/gig.dto";
 import "./dashboard.scss";
 
 export default defineComponent({
@@ -36,7 +37,7 @@ export default defineComponent({
 	},
 
 	setup(props, context) {
-		const gigs = ref([] as Array<string>);
+		const gigs = ref([] as Array<GigDto>);
 		const currentPage = ref(1);
 		const nextItem = ref(1);
 		onMounted(() => {
@@ -46,7 +47,9 @@ export default defineComponent({
 		function loadGigs() {
 			currentPage.value++;
 			for (var i = 0; i < 15; i++) {
-				gigs.value.push("Item " + nextItem.value++);
+				var gig = new GigDto(JSON.stringify(nextItem.value), "Item " + nextItem.value, "Title" + nextItem.value);
+				nextItem.value++;
+				gigs.value.push(gig);
 			}
 		}
 
