@@ -5,8 +5,8 @@
 		</div>
 		<hr />
 		<div class="p-4 mt-4">
-			<div class="p-2 d-flex justify-content-center" v-for="gig in gigs" v-bind:key="gig">
-				<gig :text="gig"></gig>
+			<div class="p-2 d-flex justify-content-center" v-for="gig in gigs" v-bind:key="gig.id">
+				<gig :gig="gig"></gig>
 			</div>
 		</div>
 	</div>
@@ -16,6 +16,7 @@
 import { defineComponent } from "@vue/composition-api";
 import Gig from "../../../components/Main/gig/gig.vue";
 import AddContent from "../../../components/Main/add-content/add-content.vue";
+import { GigDto } from "../../../interfaces/gig.dto";
 
 export default defineComponent({
 	components: {
@@ -24,7 +25,7 @@ export default defineComponent({
 	},
 	props: {
 		gigs: {
-			type: Array,
+			type: Array as () => Array<GigDto>,
 			required: false,
 		},
 	},
