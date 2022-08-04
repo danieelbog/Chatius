@@ -1,0 +1,72 @@
+#chat-container {
+    height: 0;
+    position: fixed;
+    z-index: 1000;
+    overflow: visible;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+
+    & .chat-container-overlay {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 100px);
+        flex: 0 0 288px;
+        width: 288px;
+        min-width: 0;
+        background: var(--color-background-container);
+        box-shadow: var(--elevation-raised);
+        transform: translateY(0);
+        animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+
+        &.chat-container-is-expanded {
+            animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+            transition-duration: 167ms;
+        }   
+    
+        &.chat-container-is-minimized {
+            transform: translateY(100%) translateY(-50px) !important;
+            animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+            transition-duration: 167ms;
+        }
+
+        & header:hover{
+            cursor: pointer;
+            background: var(--bs-gray-200) !important;
+        }
+
+        & .status {
+            width: 12px;
+            height: 12px;
+            bottom: 0;
+            right:0;
+            position: absolute;
+            border: 2px white solid;
+        }
+    }
+
+    & .conversation-list{
+        height: inherit;
+        overflow: auto;
+        & .conversation-list-overlay {
+            flex: 1;
+
+            & .conversation-user:hover{
+                cursor: pointer;
+                background: var(--bs-gray-200) !important;
+            }
+        }
+    }
+}
+
+.fade-in {
+    animation-duration: 167ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: fade-in;
+}

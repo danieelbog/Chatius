@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<main-navbar></main-navbar>
-		<infinite-scroller @pageAtBottom="loadGigs()">
-			<template v-slot:content>
+		<observable-infinite-scroll-wrapper @pageAtBottom="loadGigs()">
+			<template>
 				<div class="container mt-5">
 					<div class="row dashboard-row">
 						<dashboard-left-sidebar></dashboard-left-sidebar>
@@ -11,18 +11,19 @@
 					</div>
 				</div>
 			</template>
-		</infinite-scroller>
+		</observable-infinite-scroll-wrapper>
+		<chat-container></chat-container>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "@vue/composition-api";
-import InfiniteScroller from "../../components/Layouts/infinite-scroller/infinite-scroller.vue";
 import DashboardLeftSidebar from "./dasboard-components/dashboard-left-sidebar.vue";
 import DashboardMainConent from "./dasboard-components/dashboard-main-conent.vue";
 import DashboardRightSidebar from "./dasboard-components/dashboard-right-sidebar.vue";
-import ChatBox from "../../components/ChatBox/chat-box.vue";
 import MainNavbar from "../../components/Layouts/navbars/main-navbar.vue";
+import ChatContainer from "../../components/Chat/chat-container.vue";
+import ObservableInfiniteScrollWrapper from "../../components/Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
 import { GigDto } from "../../interfaces/gig.dto";
 import "./dashboard.scss";
 
@@ -31,9 +32,9 @@ export default defineComponent({
 		DashboardLeftSidebar,
 		DashboardMainConent,
 		DashboardRightSidebar,
-		InfiniteScroller,
-		ChatBox,
 		MainNavbar,
+		ChatContainer,
+		ObservableInfiniteScrollWrapper,
 	},
 
 	setup(props, context) {

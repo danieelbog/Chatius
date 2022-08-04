@@ -1,12 +1,12 @@
 <template>
 	<div class="d-none d-lg-block col-md-3">
-		<visible-wrapper>
-			<template v-slot:content>
+		<observable-wrapper>
+			<template>
 				<div class="p-3">
 					<card-profile></card-profile>
 				</div>
 			</template>
-		</visible-wrapper>
+		</observable-wrapper>
 
 		<sticky-wrapper :distanceFromTop="75">
 			<template v-slot:content>
@@ -23,13 +23,13 @@ import { defineComponent } from "@vue/composition-api";
 import CardProfile from "../../../components/Main/cards/card-profile.vue";
 import CardInfo from "../../../components/Main/cards/card-info.vue";
 import StickyWrapper from "../../../components/Layouts/wrappers/sticky-wrapper.vue";
-import VisibleWrapper from "../../../components/Layouts/wrappers/visible-wrapper.vue";
+import ObservableWrapper from "../../../components/Layouts/wrappers/observable-wrapper.vue";
 export default defineComponent({
 	components: {
 		CardProfile,
 		CardInfo,
 		StickyWrapper,
-		VisibleWrapper,
+		ObservableWrapper,
 	},
 	setup() {},
 });
