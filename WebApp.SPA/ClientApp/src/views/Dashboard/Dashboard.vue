@@ -12,7 +12,7 @@
 				</div>
 			</template>
 		</observable-infinite-scroll-wrapper>
-		<chat-container></chat-container>
+		<conversation-container></conversation-container>
 	</div>
 </template>
 
@@ -22,7 +22,7 @@ import DashboardLeftSidebar from "./dasboard-components/dashboard-left-sidebar.v
 import DashboardMainConent from "./dasboard-components/dashboard-main-conent.vue";
 import DashboardRightSidebar from "./dasboard-components/dashboard-right-sidebar.vue";
 import MainNavbar from "../../components/Layouts/navbars/main-navbar.vue";
-import ChatContainer from "../../components/Chat/chat-container.vue";
+import ConversationContainer from "../../components/Chat/conversation-container.vue";
 import ObservableInfiniteScrollWrapper from "../../components/Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
 import { GigDto } from "../../interfaces/gig.dto";
 import "./dashboard.scss";
@@ -33,7 +33,7 @@ export default defineComponent({
 		DashboardMainConent,
 		DashboardRightSidebar,
 		MainNavbar,
-		ChatContainer,
+		ConversationContainer,
 		ObservableInfiniteScrollWrapper,
 	},
 

@@ -1,7 +1,8 @@
 <template>
-	<div id="chat-container" class="position-fixed bottom-0" :class="chatContainerDirection()">
-		<div class="chat-container-overlay shadow rounded-top" ref="chatContainer">
-			<header class="bg-light chat-box-container rounded-top border" @click="toggleChatBox()">
+	<div id="conversation-container" class="position-fixed bottom-0" :class="ConversationContainerDirection()">
+		<chat-box-container v-if="!directionRight" :selectedChatBox="selectedChatBox"></chat-box-container>
+		<div class="conversation-container-overlay shadow rounded-top" ref="chatContainer">
+			<header class="bg-light rounded-top border" @click="toggleConversationContainer()">
 				<div class="d-flex justify-content-between p-2">
 					<div class="d-flex align-items-center">
 						<div class="position-relative">
@@ -28,23 +29,32 @@
 				<div class="conversation-list-overlay">
 					<observable-infinite-scroll-wrapper @pageAtBottom="loadChatUsers()">
 						<template>
-							<div class="conversation-user p-2" v-for="chatUser in chatUsers" :key="chatUser">{{ chatUser }}</div>
+							<div
+								class="conversation-user p-2"
+								@click="addSelectedChatBox(chatUser)"
+								v-for="chatUser in chatUsers"
+								:key="chatUser"
+							>
+								{{ chatUser }}
+							</div>
 						</template>
 					</observable-infinite-scroll-wrapper>
 				</div>
 			</section>
 		</div>
+		<chat-box-container v-if="directionRight" :selectedChatBox="selectedChatBox"></chat-box-container>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted } from "@vue/composition-api";
 import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
-import "./chat-container.scss";
+import ChatBoxContainer from "./chat-box-container.vue";
+import "./conversation-container.scss";
 // import * as signalR from "@microsoft/signalr";
 
 export default defineComponent({
-	components: { ObservableInfiniteScrollWrapper },
+	components: { ObservableInfiniteScrollWrapper, ChatBoxContainer },
 	props: {
 		directionRight: {
 			type: Boolean,
@@ -53,7 +63,7 @@ export default defineComponent({
 		},
 	},
 	setup(props, context) {
-		function chatContainerDirection(): string {
+		function ConversationContainerDirection(): string {
 			if (props.directionRight) return "end-0";
 			return "start-0";
 		}
@@ -64,7 +74,7 @@ export default defineComponent({
 		});
 
 		const expanded = ref(true);
-		function toggleChatBox() {
+		function toggleConversationContainer() {
 			expanded.value = !expanded.value;
 		}
 
@@ -88,11 +98,11 @@ export default defineComponent({
 			if (!chatContainer.value) return;
 
 			if (expanded.value) {
-				chatContainer.value.classList.remove("chat-container-is-minimized");
-				chatContainer.value.classList.add("chat-container-is-expanded");
+				chatContainer.value.classList.remove("conversation-container-is-minimized");
+				chatContainer.value.classList.add("conversation-container-is-expanded");
 			} else {
-				chatContainer.value.classList.remove("chat-container-is-expanded");
-				chatContainer.value.classList.add("chat-container-is-minimized");
+				chatContainer.value.classList.remove("conversation-container-is-expanded");
+				chatContainer.value.classList.add("conversation-container-is-minimized");
 			}
 		}
 
@@ -105,13 +115,24 @@ export default defineComponent({
 			}
 		}
 
+		const selectedChatBox = ref(null as unknown as { id: string; text: string });
+		function addSelectedChatBox(chatUser: string) {
+			var chatBox = {
+				id: chatUser,
+				text: chatUser,
+			};
+			selectedChatBox.value = chatBox;
+		}
+
 		return {
 			chatContainer: chatContainer,
-			chatContainerDirection: chatContainerDirection,
-			toggleChatBox: toggleChatBox,
+			ConversationContainerDirection: ConversationContainerDirection,
+			toggleConversationContainer: toggleConversationContainer,
 			expandedIcon: expandedIcon,
 			loadChatUsers: loadChatUsers,
 			chatUsers: chatUsers,
+			addSelectedChatBox: addSelectedChatBox,
+			selectedChatBox: selectedChatBox,
 		};
 
 		// const message = ref("");
