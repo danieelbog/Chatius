@@ -1,18 +1,21 @@
 <template>
-	<div class="bottom-0 position-sticky me-1 ms-1 d-flex justify-content-between">
-		<chat-box :chatBox="chatBox" v-for="chatBox in activeChatboxes" :key="chatBox.id"></chat-box>
+	<div class="bottom-0 position-sticky me-1 ms-1 d-flex justify-content-between" v-if="activeChatGroups">
+		<chat-box :chatGroup="chatGroup" v-for="chatGroup in activeChatGroups" :key="chatGroup.id"></chat-box>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, watch, ref, onBeforeUnmount } from "@vue/composition-api";
 import chatBox from "./chat-box.vue";
+import { ChatGroup } from "./chat.service.dto";
 
 export default defineComponent({
 	components: { chatBox },
 	props: {
-		selectedChatBox: {
-			type: null as () => { id: string; text: string },
+		selectedChatGroup: {
+			type: Object as () => ChatGroup,
+			required: false,
+			default: null,
 		},
 	},
 	setup(props, context) {
@@ -20,11 +23,11 @@ export default defineComponent({
 		const marginBetweenChatBoxesWidth = 4;
 		const chatBoxWidth = 188;
 
-		const floatToint = (value) => value | 0;
+		const floatToint = (value: number) => value | 0;
 		const numberOfAllowedChatBoxes = () =>
 			floatToint(window.innerWidth / (conversationContainerWidth + marginBetweenChatBoxesWidth + chatBoxWidth));
-		const setAllowedChatBoxes = () => (allowedNumberOfChatBoxes.value = numberOfAllowedChatBoxes());
-		const allowedNumberOfChatBoxes = ref(numberOfAllowedChatBoxes());
+		const setAllowedChatBoxes = () => (allowedNumberOfChatGroups.value = numberOfAllowedChatBoxes());
+		const allowedNumberOfChatGroups = ref(numberOfAllowedChatBoxes());
 
 		onMounted(() => {
 			window.addEventListener("resize", setAllowedChatBoxes);
@@ -33,14 +36,19 @@ export default defineComponent({
 			window.removeEventListener("resize", setAllowedChatBoxes);
 		});
 
-		const activeChatboxes = ref([] as Array<{ id: string; text: string }>);
+		const activeChatGroups = ref([] as Array<ChatGroup>);
 		watch(
-			() => props.selectedChatBox,
-			(newChatBox: { id: string; text: string }) => {
-				const chatBoxExist = activeChatboxes.value.find((c) => c.id == newChatBox.id);
-				if (!chatBoxExist) {
-					if (allowedNumberOfChatBoxes.value < activeChatboxes.value.length) removeChatBoxes();
-					activeChatboxes.value.push(newChatBox);
+			() => props.selectedChatGroup,
+			(newSelectedChatGroup: ChatGroup) => {
+				var incomingChatGroup = null as unknown as ChatGroup;
+				activeChatGroups.value.forEach((activeChatGroup) => {
+					if (activeChatGroup.memebers.every((memberId) => newSelectedChatGroup.memebers.includes(memberId)))
+						incomingChatGroup = activeChatGroup;
+				});
+
+				if (!incomingChatGroup) {
+					if (allowedNumberOfChatGroups.value < activeChatGroups.value.length) removeChatBoxes();
+					activeChatGroups.value.push(newSelectedChatGroup);
 				} else {
 					//do something
 				}
@@ -48,20 +56,20 @@ export default defineComponent({
 		);
 
 		function removeChatBoxes() {
-			const numberOfChatBoxesToRemove = floatToint(activeChatboxes.value.length - allowedNumberOfChatBoxes.value);
-			activeChatboxes.value.splice(0, numberOfChatBoxesToRemove);
+			const numberOfChatBoxesToRemove = floatToint(activeChatGroups.value.length - allowedNumberOfChatGroups.value);
+			activeChatGroups.value.splice(0, numberOfChatBoxesToRemove);
 		}
 
-		function removeChatBox(chatBox: { id: string; text: string }) {
-			var index = activeChatboxes.value.indexOf(chatBox);
+		function removeChatBox(chatBox: ChatGroup) {
+			var index = activeChatGroups.value.indexOf(chatBox);
 			if (index != -1) {
-				activeChatboxes.value.splice(index, 1);
+				activeChatGroups.value.splice(index, 1);
 				context.emit("setActiveChatBox", null);
 			}
 		}
 
 		return {
-			activeChatboxes: activeChatboxes,
+			activeChatGroups: activeChatGroups,
 		};
 	},
 });

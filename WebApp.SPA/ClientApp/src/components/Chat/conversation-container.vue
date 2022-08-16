@@ -1,6 +1,6 @@
 <template>
 	<div id="conversation-container" class="position-fixed bottom-0" :class="ConversationContainerDirection()">
-		<chat-box-container v-if="!directionRight" :selectedChatBox="selectedChatBox"></chat-box-container>
+		<chat-box-container v-if="!directionRight" :selectedChatGroup="selectedChatGroup"></chat-box-container>
 		<div class="conversation-container-overlay shadow rounded-top" ref="chatContainer">
 			<header class="bg-light rounded-top border" @click="toggleConversationContainer()">
 				<div class="d-flex justify-content-between p-2">
@@ -31,9 +31,9 @@
 						<template>
 							<div
 								class="conversation-user p-2"
-								@click="addSelectedChatBox(chatUser)"
+								@click="addSelectedChatGroup(chatUser)"
 								v-for="chatUser in chatUsers"
-								:key="chatUser"
+								:key="chatUser.id"
 							>
 								{{ chatUser }}
 							</div>
@@ -42,7 +42,7 @@
 				</div>
 			</section>
 		</div>
-		<chat-box-container v-if="directionRight" :selectedChatBox="selectedChatBox"></chat-box-container>
+		<chat-box-container v-if="directionRight" :selectedChatGroup="selectedChatGroup"></chat-box-container>
 	</div>
 </template>
 
@@ -52,6 +52,11 @@ import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infi
 import ChatBoxContainer from "./chat-box-container.vue";
 import "./conversation-container.scss";
 // import * as signalR from "@microsoft/signalr";
+import { ChatGroup, ChatUser } from "./chat.service.dto";
+import { getUsers } from "./chat.service";
+
+var uuid = require("uuid");
+const myId = uuid.v4();
 
 export default defineComponent({
 	components: { ObservableInfiniteScrollWrapper, ChatBoxContainer },
@@ -106,22 +111,20 @@ export default defineComponent({
 			}
 		}
 
-		const chatUsers = ref([] as Array<string>);
-		const chatUserId = ref(0);
-		function loadChatUsers() {
-			for (var i = 0; i < 25; i++) {
-				chatUserId.value++;
-				chatUsers.value.push(`User` + chatUserId.value);
-			}
+		const chatUsers = ref([] as Array<ChatUser>);
+		async function loadChatUsers() {
+			chatUsers.value = await getUsers(myId);
 		}
 
-		const selectedChatBox = ref(null as unknown as { id: string; text: string });
-		function addSelectedChatBox(chatUser: string) {
-			var chatBox = {
-				id: chatUser,
-				text: chatUser,
-			};
-			selectedChatBox.value = chatBox;
+		const selectedChatGroup = ref(null as unknown as ChatGroup);
+		function addSelectedChatGroup(chatUser: ChatUser) {
+			var chatGroup = {
+				id: uuid.v4(),
+				memebers: [myId, chatUser.id],
+				creatorId: myId,
+			} as ChatGroup;
+
+			selectedChatGroup.value = chatGroup;
 		}
 
 		return {
@@ -131,8 +134,8 @@ export default defineComponent({
 			expandedIcon: expandedIcon,
 			loadChatUsers: loadChatUsers,
 			chatUsers: chatUsers,
-			addSelectedChatBox: addSelectedChatBox,
-			selectedChatBox: selectedChatBox,
+			addSelectedChatGroup: addSelectedChatGroup,
+			selectedChatGroup: selectedChatGroup,
 		};
 
 		// const message = ref("");
