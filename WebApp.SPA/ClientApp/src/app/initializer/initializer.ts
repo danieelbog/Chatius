@@ -5,12 +5,13 @@ import AppError from "../App-Error.vue";
 import { pinia } from "./external/pinia";
 import { router } from "../../router/index";
 import { initBootstrapVue } from "./vue/vue-bootstrap"
-
+import { initSignalR } from "./external/signalR";
 import "../../assets/styles/material-icons/material-icons.scss";
 
 export async function initApplication() {
     try {
         initBootstrapVue(Vue);
+        await initSignalR();
 
         Vue.config.productionTip = false;
         new Vue({

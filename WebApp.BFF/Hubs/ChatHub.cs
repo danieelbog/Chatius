@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebApp.BFF.Hubs
 {
-    [Authorize]
     public class ChatHub : Hub
     {
-        public async Task NewMessage(long username, string message)
+        public async Task UserConnected(string username)
+        {
+            await Clients.All.SendAsync("userConnected", username);
+        }
+
+        public async Task NewMessage(string username, string message)
         {
             await Clients.All.SendAsync("messageReceived", username, message);
         }
