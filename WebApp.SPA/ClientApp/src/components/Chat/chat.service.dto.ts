@@ -5,12 +5,16 @@ export interface ChatUser {
 
 export interface ChatGroup {
     id: string,
-    memebers: Array<string>,
-    creatorId: string
+    memebers: Array<ChatUser>,
+    creatorId: string,
+    creator: ChatUser
 }
 
 export interface ChatMessage {
+    id: string,
     chatGroupId: string,
-    authorId: string,
+    chatGroupd: ChatGroup,
+    authorId: string
+    author: ChatUser,
     content: string,
 }

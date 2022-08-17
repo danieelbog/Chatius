@@ -1,6 +1,13 @@
 <template>
-	<div class="bottom-0 position-sticky me-1 ms-1 d-flex justify-content-between" v-if="activeChatGroups">
-		<chat-box :chatGroup="chatGroup" v-for="chatGroup in activeChatGroups" :key="chatGroup.id"></chat-box>
+	<div id="chatbox-container" class="d-flex justify-content-between" v-if="activeChatGroups">
+		<chat-box
+			:chatGroup="chatGroup"
+			v-for="chatGroup in activeChatGroups"
+			:key="chatGroup.id"
+			:width="chatBoxWidth + 'px'"
+			:chatBoxLeftMaring="chatBoxLeftMaring + 'px'"
+			:chatBoxRightMaring="chatBoxRightMaring + 'px'"
+		></chat-box>
 	</div>
 </template>
 
@@ -20,12 +27,13 @@ export default defineComponent({
 	},
 	setup(props, context) {
 		const conversationContainerWidth = 288;
-		const marginBetweenChatBoxesWidth = 4;
-		const chatBoxWidth = 188;
+		const chatBoxLeftMaring = 4;
+		const chatBoxRightMaring = 4;
+		const chatBoxWidth = 310;
 
 		const floatToint = (value: number) => value | 0;
 		const numberOfAllowedChatBoxes = () =>
-			floatToint(window.innerWidth / (conversationContainerWidth + marginBetweenChatBoxesWidth + chatBoxWidth));
+			floatToint(window.innerWidth / (conversationContainerWidth + chatBoxLeftMaring + chatBoxRightMaring + chatBoxWidth));
 		const setAllowedChatBoxes = () => (allowedNumberOfChatGroups.value = numberOfAllowedChatBoxes());
 		const allowedNumberOfChatGroups = ref(numberOfAllowedChatBoxes());
 
@@ -70,6 +78,9 @@ export default defineComponent({
 
 		return {
 			activeChatGroups: activeChatGroups,
+			chatBoxWidth: chatBoxWidth,
+			chatBoxLeftMaring: chatBoxLeftMaring,
+			chatBoxRightMaring: chatBoxRightMaring,
 		};
 	},
 });

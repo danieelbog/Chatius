@@ -1,0 +1,56 @@
+.toggable-container {
+    height: 0;
+    position: fixed;
+    z-index: 1000;
+    overflow: visible;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+
+    & .toggable-container-overlay {
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 100px);
+        min-width: 0;
+        background: var(--color-background-container);
+        box-shadow: var(--elevation-raised);
+        transform: translateY(0);
+        animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+
+        &.toggable-container-is-expanded {
+            animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+            transition-duration: 167ms;
+        }   
+    
+        &.toggable-container-is-minimized {
+            transform: translateY(100%) translateY(-50px) !important;
+            animation: fade-in 167ms cubic-bezier(.4,0,1,1);
+            transition-duration: 167ms;
+        }
+
+        & header:hover{
+            cursor: pointer;
+            background: var(--bs-gray-200) !important;
+        }
+    }
+
+    & .toggable-container-list{
+        height: inherit;
+        overflow: auto;
+        & .toggable-container-list-overlay {
+            flex: 1;
+        }
+    }
+}
+
+.fade-in {
+    animation-duration: 167ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: fade-in;
+}
