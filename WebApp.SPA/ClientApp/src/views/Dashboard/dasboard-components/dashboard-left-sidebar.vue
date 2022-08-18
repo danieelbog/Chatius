@@ -1,12 +1,8 @@
 <template>
 	<div class="d-none d-lg-block col-md-3">
-		<observable-wrapper>
-			<template>
-				<div class="p-3">
-					<card-profile></card-profile>
-				</div>
-			</template>
-		</observable-wrapper>
+		<div class="p-3">
+			<card-profile></card-profile>
+		</div>
 
 		<sticky-wrapper :distanceFromTop="75">
 			<template v-slot:content>
