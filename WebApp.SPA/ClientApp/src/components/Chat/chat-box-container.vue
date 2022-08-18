@@ -7,6 +7,7 @@
 			:width="chatBoxWidth + 'px'"
 			:chatBoxLeftMaring="chatBoxLeftMaring + 'px'"
 			:chatBoxRightMaring="chatBoxRightMaring + 'px'"
+			@hideChatBox="removeChatBox"
 		></chat-box>
 	</div>
 </template>
@@ -48,6 +49,7 @@ export default defineComponent({
 		watch(
 			() => props.selectedChatGroup,
 			(newSelectedChatGroup: ChatGroup) => {
+				if (!newSelectedChatGroup) return;
 				var incomingChatGroup = null as unknown as ChatGroup;
 				activeChatGroups.value.forEach((activeChatGroup) => {
 					if (activeChatGroup.memebers.every((memberId) => newSelectedChatGroup.memebers.includes(memberId)))
@@ -72,7 +74,7 @@ export default defineComponent({
 			var index = activeChatGroups.value.indexOf(chatBox);
 			if (index != -1) {
 				activeChatGroups.value.splice(index, 1);
-				context.emit("setActiveChatBox", null);
+				context.emit("setNewActiveChatBox", null);
 			}
 		}
 
@@ -81,6 +83,7 @@ export default defineComponent({
 			chatBoxWidth: chatBoxWidth,
 			chatBoxLeftMaring: chatBoxLeftMaring,
 			chatBoxRightMaring: chatBoxRightMaring,
+			removeChatBox: removeChatBox,
 		};
 	},
 });

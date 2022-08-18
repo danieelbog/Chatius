@@ -1,9 +1,11 @@
 <template>
 	<toggable-container
+		:showHideButton="true"
 		:height="height"
 		:width="width"
 		:toggableContainerLeftMaring="chatBoxLeftMaring"
 		:toggableContainerRightMaring="chatBoxRightMaring"
+		@hideContainer="hideChatBox()"
 		position="sticky"
 	>
 		<template v-slot:headerContent>
@@ -39,7 +41,6 @@ import { ChatGroup, ChatMessage } from "./chat.service.dto";
 import { getMessages } from "./chat.service";
 import toggableContainer from "./toggable-container.vue";
 import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
-import "./chat-box.scss";
 
 export default defineComponent({
 	components: { toggableContainer, ObservableInfiniteScrollWrapper },
@@ -83,10 +84,15 @@ export default defineComponent({
 			loadChatMessages();
 		});
 
+		function hideChatBox() {
+			context.emit("hideChatBox", props.chatGroup);
+		}
+
 		return {
 			chatMessages: chatMessages,
 			scrollToElement: scrollToElement,
 			loadChatMessages: loadChatMessages,
+			hideChatBox: hideChatBox,
 		};
 	},
 });

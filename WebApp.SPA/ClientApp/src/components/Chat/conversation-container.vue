@@ -1,10 +1,10 @@
 <template>
 	<toggable-container :directionRight="directionRight">
 		<template v-if="!directionRight" v-slot:beforeMainContainer>
-			<chat-box-container :selectedChatGroup="selectedChatGroup"></chat-box-container>
+			<chat-box-container :selectedChatGroup="selectedChatGroup" @setNewActiveChatBox="addSelected"></chat-box-container>
 		</template>
 		<template v-else v-slot:afterMainContainer>
-			<chat-box-container :selectedChatGroup="selectedChatGroup"></chat-box-container>
+			<chat-box-container :selectedChatGroup="selectedChatGroup" @setNewActiveChatBox="addSelected"></chat-box-container>
 		</template>
 		<template v-slot:headerContent>
 			<div class="position-relative">
@@ -58,17 +58,17 @@ export default defineComponent({
 	},
 	setup(props, context) {
 		onMounted(() => {
-			broadcastUserConnection();
+			// broadcastUserConnection();
 			LoadChatGroups();
 		});
 
-		connection.on("userConnected", (username: string) => {
-			console.log("user connected:", username);
-		});
+		// connection.on("userConnected", (username: string) => {
+		// 	console.log("user connected:", username);
+		// });
 
-		function broadcastUserConnection() {
-			connection.send("userConnected", myId);
-		}
+		// function broadcastUserConnection() {
+		// 	connection.send("userConnected", myId);
+		// }
 
 		const chatGroups = ref([] as Array<ChatGroup>);
 		async function LoadChatGroups() {

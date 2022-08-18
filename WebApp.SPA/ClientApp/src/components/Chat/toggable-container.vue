@@ -1,7 +1,19 @@
 <template>
-	<div class="toggable-container bottom-0" :class="setToggableContainerPosition()">
+	<div
+		class="toggable-container bottom-0"
+		:class="{
+			'end-0': directionRight,
+			'start-0': !directionRight,
+			'position-sticky': position == 'sticky',
+			'position-fixed': position == 'fixed',
+		}"
+	>
 		<slot name="beforeMainContainer"></slot>
-		<div class="toggable-container-overlay shadow rounded-top" ref="toggableContainer">
+		<div
+			class="toggable-container-overlay shadow rounded-top"
+			:class="{ 'toggable-container-is-expanded': expanded, 'toggable-container-is-minimized': !expanded }"
+			ref="toggableContainer"
+		>
 			<header class="bg-light rounded-top border" @click="toggleContainer()">
 				<div class="d-flex justify-content-between p-2">
 					<div class="d-flex align-items-center">
@@ -9,7 +21,16 @@
 					</div>
 					<div class="d-flex justify-content-between">
 						<button type="button" class="navbar-toggler border-0 shadow-none not-collapsed">
-							<span class="material-icons shadow-none">{{ expandedIcon }}</span>
+							<span v-if="expanded" class="material-icons shadow-none">keyboard_arrow_down</span>
+							<span v-else class="material-icons shadow-none">keyboard_arrow_up</span>
+						</button>
+						<button
+							v-if="showHideButton"
+							type="button"
+							class="navbar-toggler border-0 shadow-none not-collapsed"
+							@click="hideContainer()"
+						>
+							<span class="material-icons shadow-none md-18">close</span>
 						</button>
 					</div>
 				</div>
@@ -31,6 +52,16 @@ import "./toggable-container.scss";
 
 export default defineComponent({
 	props: {
+		showExpanded: {
+			type: Boolean,
+			required: false,
+			default: true,
+		},
+		showHideButton: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 		directionRight: {
 			type: Boolean,
 			required: false,
@@ -62,8 +93,8 @@ export default defineComponent({
 			default: "0px",
 		},
 	},
-	setup(props) {
-		const expanded = ref(true);
+	setup(props, context) {
+		const expanded = ref(props.showExpanded);
 		function toggleContainer() {
 			expanded.value = !expanded.value;
 		}
@@ -72,35 +103,10 @@ export default defineComponent({
 			() => expanded.value,
 			(newVal: boolean) => {
 				expanded.value = newVal;
-				setExpandedIcon();
-				setExpandedClass();
 			},
 		);
 
-		const expandedIcon = ref("keyboard_arrow_down");
-		function setExpandedIcon() {
-			if (expanded.value) expandedIcon.value = "keyboard_arrow_down";
-			else expandedIcon.value = "keyboard_arrow_up";
-		}
-
 		const toggableContainer = ref(null as unknown as HTMLElement);
-		function setExpandedClass() {
-			if (!toggableContainer.value) return;
-
-			if (expanded.value) {
-				toggableContainer.value.classList.remove("toggable-container-is-minimized");
-				toggableContainer.value.classList.add("toggable-container-is-expanded");
-			} else {
-				toggableContainer.value.classList.remove("toggable-container-is-expanded");
-				toggableContainer.value.classList.add("toggable-container-is-minimized");
-			}
-		}
-
-		function setToggableContainerPosition() {
-			if (props.directionRight) return `end-0 position-` + props.position;
-			return `start-0 position-` + props.position;
-		}
-
 		function setToggableContainerStyle() {
 			toggableContainer.value.style.height = props.height;
 			toggableContainer.value.style.width = props.width;
@@ -113,11 +119,15 @@ export default defineComponent({
 			setToggableContainerStyle();
 		});
 
+		function hideContainer() {
+			context.emit("hideContainer");
+		}
+
 		return {
 			toggableContainer: toggableContainer,
-			expandedIcon: expandedIcon,
-			setToggableContainerPosition: setToggableContainerPosition,
+			expanded: expanded,
 			toggleContainer: toggleContainer,
+			hideContainer: hideContainer,
 		};
 	},
 });
