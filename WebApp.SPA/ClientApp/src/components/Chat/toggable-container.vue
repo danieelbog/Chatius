@@ -78,7 +78,7 @@ export default defineComponent({
 		}
 
 		watch(
-			() => expanded.value,
+			() => props.showExpanded,
 			(newVal: boolean) => {
 				expanded.value = newVal;
 			},
