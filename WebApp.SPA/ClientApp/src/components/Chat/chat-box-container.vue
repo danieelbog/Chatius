@@ -1,5 +1,5 @@
 <template>
-	<div id="chatbox-container" class="d-flex justify-content-between" v-if="activeChatGroups">
+	<div class="chat-box-container">
 		<chat-box
 			:chatGroup="chatGroup"
 			v-for="chatGroup in activeChatGroups"
@@ -14,8 +14,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, watch, ref, onBeforeUnmount } from "@vue/composition-api";
-import chatBox from "./chat-box.vue";
 import { ChatGroup } from "./chat.service.dto";
+import chatBox from "./chat-box.vue";
+import "./chat-box-container.scss";
 
 export default defineComponent({
 	components: { chatBox },
