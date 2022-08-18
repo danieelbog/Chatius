@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, onBeforeUnmount } from "@vue/composition-api";
+import { defineComponent, onMounted, watch, ref, onBeforeUnmount, nextTick } from "@vue/composition-api";
 import { ChatGroup } from "./chat.service.dto";
 import chatBox from "./chat-box.vue";
 import "./chat-box-container.scss";
@@ -69,20 +69,31 @@ export default defineComponent({
 			() => props.selectedChatGroup,
 			(newSelectedChatGroup: ChatGroup) => {
 				if (!newSelectedChatGroup) return;
-				var incomingChatGroup = null as unknown as ChatGroup;
-				activeChatGroups.value.forEach((activeChatGroup) => {
-					if (activeChatGroup.memebers.every((memberId) => newSelectedChatGroup.memebers.includes(memberId)))
-						incomingChatGroup = activeChatGroup;
-				});
-
-				if (!incomingChatGroup) {
-					if (allowedNumberOfChatGroups.value < activeChatGroups.value.length) removeChatBoxes();
-					activeChatGroups.value.push(newSelectedChatGroup);
-				} else {
-					//do something
-				}
+				showOrExpandIncomingChatGroup(newSelectedChatGroup);
 			},
 		);
+
+		function showOrExpandIncomingChatGroup(newSelectedChatGroup: ChatGroup) {
+			var incomingChatGroupIndex = getIndexOf(newSelectedChatGroup, activeChatGroups.value);
+			if (incomingChatGroupIndex < 0) {
+				if (allowedNumberOfChatGroups.value < activeChatGroups.value.length) removeChatBoxes();
+				activeChatGroups.value.push(newSelectedChatGroup);
+			} else {
+				removeChatBox(activeChatGroups.value[incomingChatGroupIndex]);
+				nextTick(() => {
+					activeChatGroups.value.splice(incomingChatGroupIndex, 0, newSelectedChatGroup);
+				});
+			}
+			resetActiveChatBox();
+		}
+
+		function getIndexOf(newSelectedChatGroup: ChatGroup, activeChatGroups: Array<ChatGroup>): number {
+			for (let i = 0; i < activeChatGroups.length; i++) {
+				const activeChatGroup = activeChatGroups[i];
+				if (activeChatGroup.memebers.every((memberId) => newSelectedChatGroup.memebers.includes(memberId))) return i;
+			}
+			return -1;
+		}
 
 		function removeChatBoxes() {
 			const numberOfChatBoxesToRemove = floatToint(activeChatGroups.value.length - allowedNumberOfChatGroups.value);
@@ -93,8 +104,12 @@ export default defineComponent({
 			var index = activeChatGroups.value.indexOf(chatBox);
 			if (index != -1) {
 				activeChatGroups.value.splice(index, 1);
-				context.emit("setNewActiveChatBox", null);
+				resetActiveChatBox();
 			}
+		}
+
+		function resetActiveChatBox() {
+			context.emit("setNewActiveChatBox", null);
 		}
 
 		return {
