@@ -25,16 +25,34 @@ export default defineComponent({
 			required: false,
 			default: null,
 		},
+		conversationContainerWidth: {
+			type: Number,
+			required: false,
+			default: 288,
+		},
+		chatBoxLeftMaring: {
+			type: Number,
+			required: false,
+			default: 4,
+		},
+		chatBoxRightMaring: {
+			type: Number,
+			required: false,
+			default: 4,
+		},
+		chatBoxWidth: {
+			type: Number,
+			required: false,
+			default: 310,
+		},
 	},
 	setup(props, context) {
-		const conversationContainerWidth = 288;
-		const chatBoxLeftMaring = 4;
-		const chatBoxRightMaring = 4;
-		const chatBoxWidth = 310;
-
 		const floatToint = (value: number) => value | 0;
 		const numberOfAllowedChatBoxes = () =>
-			floatToint(window.innerWidth / (conversationContainerWidth + chatBoxLeftMaring + chatBoxRightMaring + chatBoxWidth));
+			floatToint(
+				window.innerWidth /
+					(props.conversationContainerWidth + props.chatBoxLeftMaring + props.chatBoxRightMaring + props.chatBoxWidth),
+			);
 		const setAllowedChatBoxes = () => (allowedNumberOfChatGroups.value = numberOfAllowedChatBoxes());
 		const allowedNumberOfChatGroups = ref(numberOfAllowedChatBoxes());
 
@@ -80,9 +98,6 @@ export default defineComponent({
 
 		return {
 			activeChatGroups: activeChatGroups,
-			chatBoxWidth: chatBoxWidth,
-			chatBoxLeftMaring: chatBoxLeftMaring,
-			chatBoxRightMaring: chatBoxRightMaring,
 			removeChatBox: removeChatBox,
 		};
 	},

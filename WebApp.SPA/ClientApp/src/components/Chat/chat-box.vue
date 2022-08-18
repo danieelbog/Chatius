@@ -6,7 +6,6 @@
 		:toggableContainerLeftMaring="chatBoxLeftMaring"
 		:toggableContainerRightMaring="chatBoxRightMaring"
 		@hideContainer="hideChatBox()"
-		position="sticky"
 	>
 		<template v-slot:headerContent>
 			<div class="position-relative">

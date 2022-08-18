@@ -11,7 +11,7 @@ import "../../assets/styles/material-icons/material-icons.scss";
 export async function initApplication() {
     try {
         initBootstrapVue(Vue);
-        await initSignalR();
+        // await initSignalR();
 
         Vue.config.productionTip = false;
         new Vue({

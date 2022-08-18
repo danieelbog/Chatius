@@ -1,48 +1,36 @@
 <template>
 	<div
-		class="toggable-container bottom-0"
-		:class="{
-			'end-0': directionRight,
-			'start-0': !directionRight,
-			'position-sticky': position == 'sticky',
-			'position-fixed': position == 'fixed',
-		}"
+		class="toggable-container-overlay shadow rounded-top"
+		:class="{ 'toggable-container-is-expanded': expanded, 'toggable-container-is-minimized': !expanded }"
+		ref="toggableContainer"
 	>
-		<slot name="beforeMainContainer"></slot>
-		<div
-			class="toggable-container-overlay shadow rounded-top"
-			:class="{ 'toggable-container-is-expanded': expanded, 'toggable-container-is-minimized': !expanded }"
-			ref="toggableContainer"
-		>
-			<header class="bg-light rounded-top border" @click="toggleContainer()">
-				<div class="d-flex justify-content-between p-2">
-					<div class="d-flex align-items-center">
-						<slot name="headerContent"></slot>
-					</div>
-					<div class="d-flex justify-content-between">
-						<button type="button" class="navbar-toggler border-0 shadow-none not-collapsed">
-							<span v-if="expanded" class="material-icons shadow-none">keyboard_arrow_down</span>
-							<span v-else class="material-icons shadow-none">keyboard_arrow_up</span>
-						</button>
-						<button
-							v-if="showHideButton"
-							type="button"
-							class="navbar-toggler border-0 shadow-none not-collapsed"
-							@click="hideContainer()"
-						>
-							<span class="material-icons shadow-none md-18">close</span>
-						</button>
-					</div>
+		<header class="bg-light rounded-top border" @click="toggleContainer()">
+			<div class="d-flex justify-content-between p-2">
+				<div class="d-flex align-items-center">
+					<slot name="headerContent"></slot>
 				</div>
-			</header>
-			<slot name="beforeMainContent"></slot>
-			<section class="bg-light toggable-container-list border border-top-0">
-				<div class="toggable-container-list-overlay">
-					<slot name="mainContent"></slot>
+				<div class="d-flex justify-content-between">
+					<button type="button" class="navbar-toggler border-0 shadow-none not-collapsed">
+						<span v-if="expanded" class="material-icons shadow-none">keyboard_arrow_down</span>
+						<span v-else class="material-icons shadow-none">keyboard_arrow_up</span>
+					</button>
+					<button
+						v-if="showHideButton"
+						type="button"
+						class="navbar-toggler border-0 shadow-none not-collapsed"
+						@click="hideContainer()"
+					>
+						<span class="material-icons shadow-none md-18">close</span>
+					</button>
 				</div>
-			</section>
-		</div>
-		<slot name="afterMainContainer"></slot>
+			</div>
+		</header>
+		<slot name="beforeMainContent"></slot>
+		<section class="bg-light toggable-container-list border border-top-0">
+			<div class="toggable-container-list-overlay">
+				<slot name="mainContent"></slot>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -61,16 +49,6 @@ export default defineComponent({
 			type: Boolean,
 			required: false,
 			default: false,
-		},
-		directionRight: {
-			type: Boolean,
-			required: false,
-			default: true,
-		},
-		position: {
-			type: String,
-			required: false,
-			default: "fixed",
 		},
 		height: {
 			type: String,
