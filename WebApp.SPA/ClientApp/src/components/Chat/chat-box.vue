@@ -6,6 +6,7 @@
 		:toggableContainerLeftMaring="chatBoxLeftMaring"
 		:toggableContainerRightMaring="chatBoxRightMaring"
 		@hideContainer="hideChatBox()"
+		ref="toggableContainer"
 	>
 		<template v-slot:headerContent>
 			<div class="position-relative">
@@ -87,11 +88,18 @@ export default defineComponent({
 			context.emit("hideChatBox", props.chatGroup);
 		}
 
+		const toggableContainer = ref(null as unknown as any);
+		function expand() {
+			toggableContainer.value.expand();
+		}
+
 		return {
 			chatMessages: chatMessages,
 			scrollToElement: scrollToElement,
+			toggableContainer: toggableContainer,
 			loadChatMessages: loadChatMessages,
 			hideChatBox: hideChatBox,
+			expand: expand,
 		};
 	},
 });

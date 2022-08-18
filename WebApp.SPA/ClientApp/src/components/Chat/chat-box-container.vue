@@ -8,6 +8,7 @@
 			:chatBoxLeftMaring="chatBoxLeftMaring + 'px'"
 			:chatBoxRightMaring="chatBoxRightMaring + 'px'"
 			@hideChatBox="removeChatBox"
+			ref="chatBoxes"
 		></chat-box>
 	</div>
 </template>
@@ -73,16 +74,14 @@ export default defineComponent({
 			},
 		);
 
+		const chatBoxes = ref([] as Array<any>);
 		function showOrExpandIncomingChatGroup(newSelectedChatGroup: ChatGroup) {
 			var incomingChatGroupIndex = getIndexOf(newSelectedChatGroup, activeChatGroups.value);
 			if (incomingChatGroupIndex < 0) {
 				if (allowedNumberOfChatGroups.value < activeChatGroups.value.length) removeChatBoxes();
 				activeChatGroups.value.push(newSelectedChatGroup);
 			} else {
-				removeChatBox(activeChatGroups.value[incomingChatGroupIndex]);
-				nextTick(() => {
-					activeChatGroups.value.splice(incomingChatGroupIndex, 0, newSelectedChatGroup);
-				});
+				chatBoxes.value.find((chatBox) => chatBox.chatGroup.id == newSelectedChatGroup.id).expand();
 			}
 			resetActiveChatBox();
 		}
@@ -113,8 +112,9 @@ export default defineComponent({
 		}
 
 		return {
-			activeChatGroups: activeChatGroups,
 			removeChatBox: removeChatBox,
+			activeChatGroups: activeChatGroups,
+			chatBoxes: chatBoxes,
 		};
 	},
 });

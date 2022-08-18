@@ -77,6 +77,14 @@ export default defineComponent({
 			expanded.value = !expanded.value;
 		}
 
+		function expand() {
+			expanded.value = true;
+		}
+
+		function minimize() {
+			expanded.value = false;
+		}
+
 		watch(
 			() => props.showExpanded,
 			(newVal: boolean) => {
@@ -106,6 +114,8 @@ export default defineComponent({
 			expanded: expanded,
 			toggleContainer: toggleContainer,
 			hideContainer: hideContainer,
+			expand: expand,
+			minimize: minimize,
 		};
 	},
 });
