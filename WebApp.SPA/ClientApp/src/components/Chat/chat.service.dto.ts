@@ -13,7 +13,7 @@ export interface ChatGroup {
 export interface ChatMessage {
     id: string,
     chatGroupId: string,
-    chatGroupd: ChatGroup,
+    chatGroup: ChatGroup,
     authorId: string
     author: ChatUser,
     content: string,
