@@ -7,18 +7,27 @@
 			'start-0 flex-row': !directionRight,
 		}"
 	>
-		<conversation-container :directionRight="directionRight" @setNewActiveChatBox="addSelected"></conversation-container>
-		<chat-box-container :selectedChatGroup="selectedChatGroup" @setNewActiveChatBox="addSelected"></chat-box-container>
+		<conversation-container
+			:directionRight="directionRight"
+			@setNewActiveChatBox="addSelected"
+		></conversation-container>
+		<chat-box-container
+			:selectedChatGroup="selectedChatGroup"
+			@setNewActiveChatBox="addSelected"
+		></chat-box-container>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "@vue/composition-api";
+import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
 import { ChatGroup } from "./chat.service.dto";
 
 import ChatBoxContainer from "./chat-box-container.vue";
 import ConversationContainer from "./conversation-container.vue";
+import { useAuthStore } from "../../store/auth-store";
+import { useEventStore } from "../../store/event-store";
 import "./chatius.scss";
+import Vue from "vue";
 
 export default defineComponent({
 	components: { ConversationContainer, ChatBoxContainer },
@@ -49,11 +58,30 @@ export default defineComponent({
 			default: 310,
 		},
 	},
-	setup() {
+	setup(props, context) {
 		const selectedChatGroup = ref(null as unknown as ChatGroup);
 		function addSelected(chatGroup: ChatGroup) {
 			selectedChatGroup.value = chatGroup;
 		}
+
+		const eventStore = useEventStore();
+		watch(
+			() => eventStore,
+			(newEvent) => {
+				if (newEvent.eventName != "user-connected") return;
+				console.log(`${eventStore.args} just Connected`);
+			},
+			{ deep: true },
+		);
+
+		watch(
+			() => eventStore,
+			(newEvent) => {
+				if (newEvent.eventName != "user-disconnected") return;
+				console.log(`${eventStore.args} just disconnected`);
+			},
+			{ deep: true },
+		);
 
 		return {
 			selectedChatGroup: selectedChatGroup,

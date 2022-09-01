@@ -1,49 +1,15 @@
-import { ChatMessage, ChatUser, ChatGroup } from './chat.service.dto';
+import { ChatMessage, ApplicationUser, ChatGroup } from './chat.service.dto';
 var uuid = require("uuid");
 const myId = uuid.v4();
 
-
-export async function getUser(userId: string) {
-
-}
-
-export async function updateChatUser(chatUser: ChatUser) {
-
-}
-
-export async function deleteChatUser(chatUserId: string) {
-
-}
-
-
-export async function getChatGroupsFor(userId: string) {
-
-}
-
-
-export async function deleteChatGroupFor(userId: string, chatGroupId: string) {
-
-}
-
-
-export async function getChatMessagesFor(chatGroupdId: string) {
-
-}
-
-export async function addNewChatMessage(chatMessage: ChatMessage) {
-
-}
-
-
-export async function getUsers(userid: string): Promise<Array<ChatUser>>{
-    const chatUsers = [] as Array<ChatUser>
+export async function getUsers(userid: string): Promise<Array<ApplicationUser>>{
+    const chatUsers = [] as Array<ApplicationUser>
     return await new Promise(resolve => setTimeout(()=> {
         for (var i = 0; i < 25; i++) {
             var userId = uuid.v4();
             var user = {
                 id: userId,
-                name: userId,
-            } as ChatUser;
+            } as ApplicationUser;
             chatUsers.push(user);
         }
         console.log("messages loaded")
@@ -58,7 +24,7 @@ export async function getMessages(chatGroupId: string): Promise<Array<ChatMessag
             var ChatMessage = {
                 id:uuid.v4(),
                 chatGroupId: chatGroupId,
-                author: i % 2 === 0 ? { id: myId, name: myId } as ChatUser : { id: uuid.v4(), name: "User-" + i } as ChatUser,
+                author: i % 2 === 0 ? { id: myId } as ApplicationUser : { id: uuid.v4() } as ApplicationUser,
                 content: `message-${i}`
             } as ChatMessage
             chatMessages.push(ChatMessage);
@@ -76,17 +42,14 @@ return await new Promise(resolve => setTimeout(()=> {
             memebers: [
                 {
                     id: myId,
-                    name: myId
-                } as ChatUser,
+                } as ApplicationUser,
                 {
                     id: uuid.v4(),
-                    name: "UserName-"+ i
-                } as ChatUser
+                } as ApplicationUser
             ],
             creator: {
                 id: myId,
-                name: myId
-            } as ChatUser,
+            } as ApplicationUser,
         } as ChatGroup
         chatGroups.push(chatGroupd);
         resolve(chatGroups);

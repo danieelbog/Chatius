@@ -12,6 +12,7 @@
 			<b-navbar-nav class="ml-auto align-items-end p-1">
 				<b-nav-item href="#">Profile Settings</b-nav-item>
 				<b-nav-item href="#">Account</b-nav-item>
+				<b-nav-item href="#" @click="logout()">Logout</b-nav-item>
 			</b-navbar-nav>
 		</b-collapse>
 	</b-navbar>
@@ -19,6 +20,24 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
+import { useAuthStore } from "../../../store/auth-store";
+import { router } from "../../../router";
 
-export default defineComponent({});
+export default defineComponent({
+	setup(props, context) {
+		async function logout() {
+			const authStore = useAuthStore();
+			await authStore.logout();
+			logoutRedirect();
+		}
+
+		function logoutRedirect() {
+			router?.push("/login");
+		}
+
+		return {
+			logout,
+		};
+	},
+});
 </script>

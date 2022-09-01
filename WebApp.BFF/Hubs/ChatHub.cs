@@ -3,19 +3,25 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebApp.BFF.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
-        public async Task UserConnected(string username)
+        public async Task ConnectUser(string username)
         {
             await Clients.All.SendAsync("userConnected", username);
         }
 
-        public async Task NewMessage(string username, string message)
+        public async Task DisconnectUser(string username)
+        {
+            await Clients.All.SendAsync("userDisconnected", username);
+        }
+
+        public async Task SendChatMessage(string username, string message)
         {
             await Clients.All.SendAsync("messageReceived", username, message);
         }
 
-        public Task SendPrivateMessage(string user, string message)
+        public Task ReceiveMessage(string user, string message)
         {
             return Clients.User(user).SendAsync("ReceiveMessage", message);
         }
