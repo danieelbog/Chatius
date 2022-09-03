@@ -1,8 +1,8 @@
-import Vue from "vue";
 import { LoginDto, RegisterDto } from "./../views/Authentication/auth.service.dto";
 import { ApplicationUser } from "./../components/Chat/chat.service.dto";
 import { defineStore } from "pinia";
 import { api } from "../app/initializer/vue/vue-axios";
+import { useSignalRStore } from "./signalR-store";
 
 export const useAuthStore = defineStore("auth", {
 	state: () => ({
@@ -20,23 +20,30 @@ export const useAuthStore = defineStore("auth", {
 			// await api.get("/sanctum/csrf-cookie");
 			const result = await api.get("/getAuthUser");
 			if (result.data) this.setApplicationUser(result.data);
-			if (this.isAuthenticated()) Vue.prototype.startSignalR();
+			if (!this.isAuthenticated()) return;
+			const signalRStore = useSignalRStore();
+			await signalRStore.startSignalR();
 		},
 		async login(loginDto: LoginDto) {
 			// await api.get("/sanctum/csrf-cookie");
 			const result = await api.post("/login", loginDto);
 			if (result.data) this.setApplicationUser(result.data);
-			if (this.isAuthenticated()) Vue.prototype.startSignalR();
+			if (!this.isAuthenticated()) return;
+			const signalRStore = useSignalRStore();
+			await signalRStore.startSignalR();
 		},
 		async registerUser(registerDto: RegisterDto) {
 			// await api.get("/sanctum/csrf-cookie");
 			const result = await api.post("/register", registerDto);
 			if (result.data) this.setApplicationUser(result.data);
-			if (this.isAuthenticated()) Vue.prototype.startSignalR();
+			if (!this.isAuthenticated()) return;
+			const signalRStore = useSignalRStore();
+			await signalRStore.startSignalR();
 		},
 		async logout() {
 			// await api.get("/sanctum/csrf-cookie");
-			Vue.prototype.stopSignalR();
+			const signalRStore = useSignalRStore();
+			await signalRStore.stopSignalR();
 			await api.post("/logout");
 			this.$reset();
 		},

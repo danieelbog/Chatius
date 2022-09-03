@@ -12,7 +12,7 @@ import "../../assets/styles/material-icons/material-icons.scss";
 export async function initApplication() {
 	try {
 		initBootstrapVue(Vue);
-		Vue.use(SignalRPlugin);
+		// Vue.use(SignalRPlugin);
 		Vue.config.productionTip = false;
 		new Vue({
 			pinia,
