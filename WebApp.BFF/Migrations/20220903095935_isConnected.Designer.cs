@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.BFF.Database;
 
@@ -11,9 +12,10 @@ using WebApp.BFF.Database;
 namespace WebApp.BFF.Migrations
 {
     [DbContext(typeof(ChatiusContext))]
-    partial class ChatiusContextModelSnapshot : ModelSnapshot
+    [Migration("20220903095935_isConnected")]
+    partial class isConnected
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,57 +240,6 @@ namespace WebApp.BFF.Migrations
                     b.ToTable("Connections");
                 });
 
-            modelBuilder.Entity("WebApp.BFF.Core.Models.Group", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("WebApp.BFF.Core.Models.Message", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("GroupId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("WebApp.BFF.Core.Models.UserGroup", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ApplicationUserId", "GroupId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("UserGroups");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -351,58 +302,9 @@ namespace WebApp.BFF.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("WebApp.BFF.Core.Models.Message", b =>
-                {
-                    b.HasOne("WebApp.BFF.Core.Models.ApplicationUser", "Author")
-                        .WithMany("Messages")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApp.BFF.Core.Models.Group", "Group")
-                        .WithMany("Messages")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("WebApp.BFF.Core.Models.UserGroup", b =>
-                {
-                    b.HasOne("WebApp.BFF.Core.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApp.BFF.Core.Models.Group", "Group")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("WebApp.BFF.Core.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Connections");
-
-                    b.Navigation("Messages");
-
-                    b.Navigation("UserGroups");
-                });
-
-            modelBuilder.Entity("WebApp.BFF.Core.Models.Group", b =>
-                {
-                    b.Navigation("Messages");
-
-                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,10 +1,11 @@
 ﻿namespace WebApp.BFF.Core.Models
 {
-    public class Connection
+    public class UserGroup
     {
-        public string Id { get; set; }
         public string ApplicationUserId { get; set; }
-        public bool IsConnected { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        public string GroupId { get; set; }
+        public Group Group { get; set; }
+
     }
 }

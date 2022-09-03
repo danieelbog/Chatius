@@ -1,43 +1,72 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Xml.Linq;
+using WebApp.BFF.Core.Models;
+using WebApp.BFF.Database;
 
 namespace WebApp.BFF.Hubs
 {
     [Authorize]
     public class ChatHub : Hub
     {
-        public async Task ConnectUser(string username)
+        private ChatiusContext _dbContext;
+        public ChatHub(ChatiusContext dbContext)
         {
-            await Clients.All.SendAsync("userConnected", username);
+            _dbContext = dbContext;
         }
 
-        public async Task DisconnectUser(string username)
+        public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("userDisconnected", username);
+            try
+            {
+                var name = Context?.User?.Identity?.Name;
+                var user = await _dbContext.ApplcationUsers
+                    .Include(u => u.Connections)
+                    .SingleOrDefaultAsync(u => u.UserName == name);
+
+                if (user == null)
+                    throw new Exception("There is no such user! How did you get here anyways??? :)");
+
+                var connection = new Connection()
+                {
+                    Id = Context.ConnectionId,
+                    ApplicationUserId = user.Id,
+                    ApplicationUser = user,
+                    IsConnected = true
+                };
+
+                user.Connections.Add(connection);
+                _dbContext.SaveChanges();
+
+                await Clients.All.SendAsync("userConnected", user.UserName);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
         }
-
-        public async Task SendChatMessage(string username, string message)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            await Clients.All.SendAsync("messageReceived", username, message);
-        }
+            try
+            {
+                var userId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == null)
+                    throw new Exception("There is no such userId! How did you get here anyways??? :)");
 
-        public Task ReceiveMessage(string user, string message)
-        {
-            return Clients.User(user).SendAsync("ReceiveMessage", message);
-        }
+                var connection = await _dbContext.Connections.FindAsync(keyValues: new object[] {Context.ConnectionId, userId});
+                if (connection == null)
+                    throw new Exception("There is no such connection! How did you get here anyways??? :)");
 
-        public async Task AddToGroup(string groupName)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
-        }
-
-        public async Task RemoveFromGroup(string groupName)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
+                connection.IsConnected = false;
+                _dbContext.SaveChanges();
+                await Clients.All.SendAsync("userDisconnected", Context.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
         }
     }
 }
