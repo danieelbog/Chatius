@@ -22,15 +22,26 @@
 			<div class="ms-2">User Name</div>
 		</template>
 		<template v-slot:mainContent>
-			<div v-for="chatMessage in chatMessages" :key="chatMessage.id">
-				<div v-if="chatMessage.authorId != 'other'" class="bg-warning">
-					{{ chatMessage.content }}
-				</div>
-				<div v-else class="bg-danger">
-					{{ chatMessage.content }}
-				</div>
-			</div>
-			<div ref="scrollToElement"></div>
+			<observable-infinite-scroll-wrapper
+				@intersect="loadChatMessages()"
+				:isColumnReverse="true"
+			>
+				<template>
+					<div class="">
+						<div v-for="chatMessage in chatMessages" :key="chatMessage.id">
+							<div
+								v-if="chatMessage.authorId != 'other'"
+								class="bg-warning"
+							>
+								{{ chatMessage.content }}
+							</div>
+							<div v-else class="bg-danger">
+								{{ chatMessage.content }}
+							</div>
+						</div>
+					</div>
+				</template>
+			</observable-infinite-scroll-wrapper>
 		</template>
 	</toggable-container>
 </template>
@@ -49,6 +60,7 @@ export default defineComponent({
 			type: Object as () => ChatGroup,
 			required: true,
 		},
+
 		height: {
 			type: String,
 			required: false,
@@ -74,10 +86,8 @@ export default defineComponent({
 		const chatMessages = ref([] as Array<ChatMessage>);
 		const scrollToElement = ref(null as unknown as HTMLElement);
 		async function loadChatMessages() {
+			console.log("logg");
 			chatMessages.value = await getMessages(props.chatGroup.id);
-			nextTick(() => {
-				scrollToElement.value.scrollIntoView({ behavior: "smooth" });
-			});
 		}
 
 		onMounted(() => {

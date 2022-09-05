@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<main-navbar></main-navbar>
-		<observable-infinite-scroll-wrapper @pageAtBottom="loadGigs()">
+		<observable-infinite-scroll-wrapper @intersect="loadGigs()">
 			<template>
 				<div class="container mt-5">
 					<div class="row dashboard-row">
@@ -49,7 +49,11 @@ export default defineComponent({
 		function loadGigs() {
 			currentPage.value++;
 			for (var i = 0; i < 15; i++) {
-				var gig = new GigDto(JSON.stringify(nextItem.value), "Item " + nextItem.value, "Title" + nextItem.value);
+				var gig = new GigDto(
+					JSON.stringify(nextItem.value),
+					"Item " + nextItem.value,
+					"Title" + nextItem.value,
+				);
 				nextItem.value++;
 				gigs.value.push(gig);
 			}

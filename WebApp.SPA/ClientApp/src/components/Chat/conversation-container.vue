@@ -14,12 +14,19 @@
 			<div class="ms-2">Messaging</div>
 		</template>
 		<template v-slot:beforeMainContent>
-			<div class="bg-light container-fluid border border-top-0 p-2">Search here</div>
+			<div class="bg-light container-fluid border border-top-0 p-2">
+				Search here
+			</div>
 		</template>
 		<template v-slot:mainContent>
-			<observable-infinite-scroll-wrapper @pageAtBottom="LoadChatGroups()">
+			<observable-infinite-scroll-wrapper @intersect="LoadChatGroups()">
 				<template>
-					<div class="conversation-user p-2" @click="addSelected(chatGroup)" v-for="chatGroup in chatGroups" :key="chatGroup.id">
+					<div
+						class="conversation-user p-2"
+						@click="addSelected(chatGroup)"
+						v-for="chatGroup in chatGroups"
+						:key="chatGroup.id"
+					>
 						{{ chatGroup.id }}
 					</div>
 				</template>

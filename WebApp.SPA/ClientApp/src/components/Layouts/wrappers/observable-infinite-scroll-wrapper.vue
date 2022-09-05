@@ -1,14 +1,17 @@
 <template>
-	<div class="observable-infiinite-scroll-wrapper">
-		<div v-if="scrollToBottom">
-			<slot name="default"></slot>
-			<observable-wrapper @intersect="emitAtPageBottom()"></observable-wrapper>
-		</div>
-		<div v-else>
-			<observable-wrapper @intersect="emitAtPageTop()"></observable-wrapper>
-			<slot name="default"></slot>
-			<slot name="scrollToElement"></slot>
-		</div>
+	<div
+		v-if="showObservable"
+		class="observable-infiinite-scroll-wrapper d-flex overflow-auto"
+		:class="{
+			'flex-column-reverse': isColumnReverse,
+			'flex-column': !isColumnReverse,
+		}"
+	>
+		<slot name="default"></slot>
+		<observable-wrapper @intersect="intersect()"></observable-wrapper>
+	</div>
+	<div v-else>
+		<slot name="default"></slot>
 	</div>
 </template>
 
@@ -19,11 +22,12 @@ import ObservableWrapper from "./observable-wrapper.vue";
 export default defineComponent({
 	components: { ObservableWrapper },
 	props: {
-		scrollingElement: {
-			type: HTMLElement,
+		isColumnReverse: {
+			type: Boolean,
 			required: false,
+			default: false,
 		},
-		scrollToBottom: {
+		showObservable: {
 			type: Boolean,
 			required: false,
 			default: true,
@@ -31,18 +35,13 @@ export default defineComponent({
 	},
 	setup(props, context) {
 		const loading = ref(false);
-		function emitAtPageTop() {
-			context.emit("pageAtTop");
-		}
-
-		function emitAtPageBottom() {
-			context.emit("pageAtBottom");
+		function intersect() {
+			context.emit("intersect");
 		}
 
 		return {
 			loading: loading,
-			emitAtPageTop: emitAtPageTop,
-			emitAtPageBottom: emitAtPageBottom,
+			intersect: intersect,
 		};
 	},
 });

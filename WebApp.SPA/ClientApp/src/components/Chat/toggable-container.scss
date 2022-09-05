@@ -25,14 +25,6 @@
             background: var(--bs-gray-200) !important;
         }
     }
-
-    & .toggable-container-list{
-        height: inherit;
-        overflow: auto;
-        & .toggable-container-list-overlay {
-            flex: 1;
-        }
-    }
 }
 
 .fade-in {

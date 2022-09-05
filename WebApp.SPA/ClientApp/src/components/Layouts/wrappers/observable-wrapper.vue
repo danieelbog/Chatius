@@ -1,5 +1,12 @@
 <template>
 	<div ref="observable">
+		<div class="d-flex justify-content-center m-2 text-primary">
+			<div
+				class="spinner-border ml-auto spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			></div>
+		</div>
 		<slot name="default"></slot>
 	</div>
 </template>
@@ -37,7 +44,6 @@ export default defineComponent({
 
 		function startObserving() {
 			if (!observable) return;
-			observable.value.style.height = "25px";
 			observer.observe(observable.value);
 		}
 

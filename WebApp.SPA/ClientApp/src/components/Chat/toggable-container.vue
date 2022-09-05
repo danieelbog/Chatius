@@ -1,7 +1,10 @@
 <template>
 	<div
-		class="toggable-container-overlay shadow rounded-top"
-		:class="{ 'toggable-container-is-expanded': expanded, 'toggable-container-is-minimized': !expanded }"
+		class="toggable-container-overlay shadow rounded-top bg-light"
+		:class="{
+			'toggable-container-is-expanded': expanded,
+			'toggable-container-is-minimized': !expanded,
+		}"
 		ref="toggableContainer"
 	>
 		<header class="bg-light rounded-top border" @click="toggleContainer()">
@@ -10,9 +13,16 @@
 					<slot name="headerContent"></slot>
 				</div>
 				<div class="d-flex justify-content-between">
-					<button type="button" class="navbar-toggler border-0 shadow-none not-collapsed">
-						<span v-if="expanded" class="material-icons shadow-none">keyboard_arrow_down</span>
-						<span v-else class="material-icons shadow-none">keyboard_arrow_up</span>
+					<button
+						type="button"
+						class="navbar-toggler border-0 shadow-none not-collapsed"
+					>
+						<span v-if="expanded" class="material-icons shadow-none"
+							>keyboard_arrow_down</span
+						>
+						<span v-else class="material-icons shadow-none"
+							>keyboard_arrow_up</span
+						>
 					</button>
 					<button
 						v-if="showHideButton"
@@ -26,11 +36,7 @@
 			</div>
 		</header>
 		<slot name="beforeMainContent"></slot>
-		<section class="bg-light toggable-container-list border border-top-0">
-			<div class="toggable-container-list-overlay">
-				<slot name="mainContent"></slot>
-			</div>
-		</section>
+		<slot name="mainContent"></slot>
 	</div>
 </template>
 
@@ -97,7 +103,8 @@ export default defineComponent({
 			toggableContainer.value.style.height = props.height;
 			toggableContainer.value.style.width = props.width;
 			toggableContainer.value.style.flex = `$0 0 ${props.width}`;
-			toggableContainer.value.style.marginRight = props.toggableContainerRightMaring;
+			toggableContainer.value.style.marginRight =
+				props.toggableContainerRightMaring;
 			toggableContainer.value.style.marginLeft = props.toggableContainerLeftMaring;
 		}
 
