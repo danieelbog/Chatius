@@ -23,11 +23,14 @@
 				<template>
 					<div
 						class="conversation-user p-2"
-						@click="addSelected(chatGroup)"
-						v-for="chatGroup in chatGroups"
-						:key="chatGroup.id"
+						v-for="group in groups"
+						:key="group.id"
+						@click="addSelected(group)"
 					>
-						{{ chatGroup.id }}
+						<div>
+							{{ getChatGroupName(group) }}
+						</div>
+						<div>STATUS</div>
 					</div>
 				</template>
 			</observable-infinite-scroll-wrapper>
@@ -36,17 +39,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "@vue/composition-api";
-import { ChatGroup } from "./chat.service.dto";
-import { getChatGroups } from "./chat.service";
+import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
+import { GroupDto, UserDto } from "./chat.service.dto";
+import { getChatGroup, getChatGroups } from "./chat.service";
 import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
 import ChatBoxContainer from "./chat-box-container.vue";
 import ToggableContainer from "./toggable-container.vue";
 import "./conversation-container.scss";
-
-var uuid = require("uuid");
-const myId = uuid.v4();
-
+import { useEventStore } from "../../store/event-store";
+import { useAuthStore } from "../../store/auth-store";
 export default defineComponent({
 	components: { ObservableInfiniteScrollWrapper, ChatBoxContainer, ToggableContainer },
 	props: {
@@ -61,21 +62,42 @@ export default defineComponent({
 			LoadChatGroups();
 		});
 
-		const chatGroups = ref([] as Array<ChatGroup>);
+		const groups = ref([] as Array<GroupDto>);
 		async function LoadChatGroups() {
-			chatGroups.value = await getChatGroups(myId);
+			groups.value = await getChatGroups();
 		}
 
-		const selectedChatGroup = ref(null as unknown as ChatGroup);
-		function addSelected(chatGroup: ChatGroup) {
+		const eventStore = useEventStore();
+		watch(
+			() => eventStore,
+			(newEvent) => {
+				if (newEvent.eventName != "addedToGroup") return;
+				addSelected(eventStore.args);
+			},
+			{ deep: true },
+		);
+
+		const selectedChatGroup = ref(null as unknown as GroupDto);
+		function addSelected(chatGroup: GroupDto) {
 			context.emit("setNewActiveChatBox", chatGroup);
 		}
 
+		const authStore = useAuthStore();
+		function getChatGroupName(group: GroupDto): string {
+			var friendName = "";
+			group.members.forEach((member: UserDto) => {
+				if (member.userName != authStore.applicationUser.userName)
+					friendName += `${member.userName}`;
+			});
+			return friendName;
+		}
+
 		return {
-			chatGroups: chatGroups,
+			groups: groups,
 			selectedChatGroup: selectedChatGroup,
 			LoadChatGroups: LoadChatGroups,
 			addSelected: addSelected,
+			getChatGroupName: getChatGroupName,
 		};
 	},
 });

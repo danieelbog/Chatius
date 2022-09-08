@@ -37,7 +37,6 @@ namespace Iwcp.Web.SPA.Application
                     spa.UseVueCli(npmScript: "serve");
                 else if (isTestingEnv)
                     spa.UseVueCli(npmScript: "test");
-
             });
         }
     }

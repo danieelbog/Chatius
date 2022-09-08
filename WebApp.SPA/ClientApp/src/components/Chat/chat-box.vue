@@ -19,12 +19,13 @@
 				/>
 				<div class="status rounded-circle bg-success"></div>
 			</div>
-			<div class="ms-2">User Name</div>
+			<div class="ms-2">{{ getChatGroupName(chatGroup) }}</div>
 		</template>
 		<template v-slot:mainContent>
 			<observable-infinite-scroll-wrapper
 				@intersect="loadChatMessages()"
 				:isColumnReverse="true"
+				:showObservable="false"
 			>
 				<template>
 					<div class="">
@@ -42,22 +43,31 @@
 					</div>
 				</template>
 			</observable-infinite-scroll-wrapper>
+			<div class="p-2 fixed-bottom">
+				<div class="d-flex justify-content-around">
+					<input type="text" v-model="chatInput" />
+					<button class="btn p-2" @click="sendMessage()">Send</button>
+				</div>
+			</div>
 		</template>
 	</toggable-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, nextTick } from "@vue/composition-api";
-import { ChatGroup, ChatMessage } from "./chat.service.dto";
+import { defineComponent, onMounted, ref, nextTick, watch } from "@vue/composition-api";
+import { GroupDto, MessageDto, UserDto } from "./chat.service.dto";
 import { getMessages } from "./chat.service";
 import toggableContainer from "./toggable-container.vue";
 import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
+import { useAuthStore } from "../../store/auth-store";
+import { useSignalRStore } from "../../store/signalR-store";
+import { useEventStore } from "../../store/event-store";
 
 export default defineComponent({
 	components: { toggableContainer, ObservableInfiniteScrollWrapper },
 	props: {
 		chatGroup: {
-			type: Object as () => ChatGroup,
+			type: Object as () => GroupDto,
 			required: true,
 		},
 
@@ -83,10 +93,9 @@ export default defineComponent({
 		},
 	},
 	setup(props, context) {
-		const chatMessages = ref([] as Array<ChatMessage>);
+		const chatMessages = ref([] as Array<MessageDto>);
 		const scrollToElement = ref(null as unknown as HTMLElement);
 		async function loadChatMessages() {
-			console.log("logg");
 			chatMessages.value = await getMessages(props.chatGroup.id);
 		}
 
@@ -103,6 +112,37 @@ export default defineComponent({
 			toggableContainer.value.expand();
 		}
 
+		const authStore = useAuthStore();
+		function getChatGroupName(group: GroupDto): string {
+			var friendName = "";
+			group.members.forEach((member: UserDto) => {
+				if (member.userName != authStore.applicationUser.userName)
+					friendName += `${member.userName}`;
+			});
+			return friendName;
+		}
+
+		const chatInput = ref(null as unknown as string);
+		const signalRStore = useSignalRStore();
+		function sendMessage() {
+			if (!signalRStore.isConnected) return;
+			var messageDto = {
+				groupId: props.chatGroup.id,
+				text: chatInput.value,
+			} as MessageDto;
+			signalRStore.connection.invoke("SendMessageTo", messageDto);
+		}
+
+		const eventStore = useEventStore();
+		watch(
+			() => eventStore,
+			(newEvent) => {
+				if (newEvent.eventName != "recievedMessage") return;
+				console.log(`${eventStore.args.text}`);
+			},
+			{ deep: true },
+		);
+
 		return {
 			chatMessages: chatMessages,
 			scrollToElement: scrollToElement,
@@ -110,6 +150,9 @@ export default defineComponent({
 			loadChatMessages: loadChatMessages,
 			hideChatBox: hideChatBox,
 			expand: expand,
+			getChatGroupName: getChatGroupName,
+			chatInput,
+			sendMessage,
 		};
 	},
 });

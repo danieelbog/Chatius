@@ -13,7 +13,6 @@ namespace WebApp.BFF.Database
 
         public DbSet<ApplicationUser> ApplcationUsers { get; set; }
         public DbSet<Connection> Connections { get; set; }
-        public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Message> Messages { get; set; }
 
@@ -40,21 +39,7 @@ namespace WebApp.BFF.Database
             builder.Entity<Message>()
                 .HasOne(c => c.Author)
                 .WithMany(g => g.Messages)
-                .HasForeignKey(m => m.AuthorId);
-
-            builder.Entity<UserGroup>()
-                .HasKey(ug => new { ug.ApplicationUserId, ug.GroupId });
-
-            builder.Entity<UserGroup>()
-                .HasOne(ug => ug.ApplicationUser)
-                .WithMany(u => u.UserGroups)
-                .HasForeignKey(ug => ug.ApplicationUserId);
-
-            builder.Entity<UserGroup>()
-                .HasOne(ug => ug.Group)
-                .WithMany(u => u.UserGroups)
-                .HasForeignKey(ug => ug.GroupId);
-
+                .HasForeignKey(m => m.AuthorId);            
         }
     }
 }

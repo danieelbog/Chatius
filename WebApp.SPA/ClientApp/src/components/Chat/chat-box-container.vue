@@ -14,8 +14,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, ref, onBeforeUnmount, nextTick } from "@vue/composition-api";
-import { ChatGroup } from "./chat.service.dto";
+import {
+	defineComponent,
+	onMounted,
+	watch,
+	ref,
+	onBeforeUnmount,
+	nextTick,
+} from "@vue/composition-api";
+import { GroupDto } from "./chat.service.dto";
 import chatBox from "./chat-box.vue";
 import "./chat-box-container.scss";
 
@@ -23,7 +30,7 @@ export default defineComponent({
 	components: { chatBox },
 	props: {
 		selectedChatGroup: {
-			type: Object as () => ChatGroup,
+			type: Object as () => GroupDto,
 			required: false,
 			default: null,
 		},
@@ -53,9 +60,13 @@ export default defineComponent({
 		const numberOfAllowedChatBoxes = () =>
 			floatToint(
 				window.innerWidth /
-					(props.conversationContainerWidth + props.chatBoxLeftMaring + props.chatBoxRightMaring + props.chatBoxWidth),
+					(props.conversationContainerWidth +
+						props.chatBoxLeftMaring +
+						props.chatBoxRightMaring +
+						props.chatBoxWidth),
 			);
-		const setAllowedChatBoxes = () => (allowedNumberOfChatGroups.value = numberOfAllowedChatBoxes());
+		const setAllowedChatBoxes = () =>
+			(allowedNumberOfChatGroups.value = numberOfAllowedChatBoxes());
 		const allowedNumberOfChatGroups = ref(numberOfAllowedChatBoxes());
 
 		onMounted(() => {
@@ -65,41 +76,58 @@ export default defineComponent({
 			window.removeEventListener("resize", setAllowedChatBoxes);
 		});
 
-		const activeChatGroups = ref([] as Array<ChatGroup>);
+		const activeChatGroups = ref([] as Array<GroupDto>);
 		watch(
 			() => props.selectedChatGroup,
-			(newSelectedChatGroup: ChatGroup) => {
+			(newSelectedChatGroup: GroupDto) => {
 				if (!newSelectedChatGroup) return;
 				showOrExpandIncomingChatGroup(newSelectedChatGroup);
 			},
 		);
 
 		const chatBoxes = ref([] as Array<any>);
-		function showOrExpandIncomingChatGroup(newSelectedChatGroup: ChatGroup) {
-			var incomingChatGroupIndex = getIndexOf(newSelectedChatGroup, activeChatGroups.value);
+		function showOrExpandIncomingChatGroup(newSelectedChatGroup: GroupDto) {
+			console.log("group", newSelectedChatGroup);
+			var incomingChatGroupIndex = getIndexOf(
+				newSelectedChatGroup,
+				activeChatGroups.value,
+			);
 			if (incomingChatGroupIndex < 0) {
-				if (allowedNumberOfChatGroups.value < activeChatGroups.value.length) removeChatBoxes();
+				if (allowedNumberOfChatGroups.value < activeChatGroups.value.length)
+					removeChatBoxes();
 				activeChatGroups.value.push(newSelectedChatGroup);
 			} else {
-				chatBoxes.value.find((chatBox) => chatBox.chatGroup.id == newSelectedChatGroup.id).expand();
+				chatBoxes.value
+					.find((chatBox) => chatBox.chatGroup.id == newSelectedChatGroup.id)
+					.expand();
 			}
 			resetActiveChatBox();
 		}
 
-		function getIndexOf(newSelectedChatGroup: ChatGroup, activeChatGroups: Array<ChatGroup>): number {
+		function getIndexOf(
+			newSelectedChatGroup: GroupDto,
+			activeChatGroups: Array<GroupDto>,
+		): number {
 			for (let i = 0; i < activeChatGroups.length; i++) {
 				const activeChatGroup = activeChatGroups[i];
-				if (activeChatGroup.memebers.every((memberId) => newSelectedChatGroup.memebers.includes(memberId))) return i;
+				if (
+					activeChatGroup.members.every((memberId) =>
+						newSelectedChatGroup.members.includes(memberId),
+					)
+				)
+					return i;
 			}
 			return -1;
 		}
 
 		function removeChatBoxes() {
-			const numberOfChatBoxesToRemove = floatToint(activeChatGroups.value.length - allowedNumberOfChatGroups.value);
+			const numberOfChatBoxesToRemove = floatToint(
+				activeChatGroups.value.length - allowedNumberOfChatGroups.value,
+			);
 			activeChatGroups.value.splice(0, numberOfChatBoxesToRemove);
 		}
 
-		function removeChatBox(chatBox: ChatGroup) {
+		function removeChatBox(chatBox: GroupDto) {
 			var index = activeChatGroups.value.indexOf(chatBox);
 			if (index != -1) {
 				activeChatGroups.value.splice(index, 1);

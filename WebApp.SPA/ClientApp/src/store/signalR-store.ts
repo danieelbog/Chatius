@@ -1,7 +1,7 @@
+import { MessageDto } from "./../components/Chat/chat.service.dto";
 import * as signalR from "@microsoft/signalr";
 import { defineStore } from "pinia";
 import { api } from "../app/initializer/vue/vue-axios";
-import { useAuthStore } from "./auth-store";
 import { useEventStore } from "./event-store";
 
 export const useSignalRStore = defineStore("signalR", {
@@ -27,6 +27,21 @@ export const useSignalRStore = defineStore("signalR", {
 				eventStore.emitNewEvent("user-disconnected", userName);
 			});
 
+			this.connection.on("userRegistered", (userName: string) => {
+				eventStore.clearState();
+				eventStore.emitNewEvent("userRegistered", userName);
+			});
+
+			this.connection.on("addedToGroup", (userName: string) => {
+				eventStore.clearState();
+				eventStore.emitNewEvent("addedToGroup", userName);
+			});
+
+			this.connection.on("recievedMessage", (messageDto: MessageDto) => {
+				eventStore.clearState();
+				eventStore.emitNewEvent("recievedMessage", messageDto);
+			});
+
 			this.connection.onclose(() => {
 				if (!this.manuallyClosed) this.start();
 			});
@@ -48,15 +63,6 @@ export const useSignalRStore = defineStore("signalR", {
 			this.manuallyClosed = true;
 			await this.connection.stop();
 			this.isConnected = false;
-		},
-
-		async sendChatMessage(message: string) {
-			if (!this.isConnected) return;
-			try {
-				await this.connection.invoke("SendChatMessage", message);
-			} catch (error) {
-				console.error(error);
-			}
 		},
 	},
 });

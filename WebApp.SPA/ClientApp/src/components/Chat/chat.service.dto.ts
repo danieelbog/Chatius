@@ -1,21 +1,18 @@
-export interface ApplicationUser {
-	id: string;
+export interface UserDto {
 	userName: string;
 	email: string;
-	password: string;
-}
-export interface ChatGroup {
-	id: string;
-	memebers: Array<ApplicationUser>;
-	creatorId: string;
-	creator: ApplicationUser;
+	connected: boolean;
 }
 
-export interface ChatMessage {
+export interface GroupDto {
 	id: string;
-	chatGroupId: string;
-	chatGroup: ChatGroup;
-	authorId: string;
-	author: ApplicationUser;
-	content: string;
+	name: string;
+	members: Array<UserDto>;
+}
+
+export interface MessageDto {
+	id: string;
+	author: UserDto;
+	groupId: string;
+	text: string
 }

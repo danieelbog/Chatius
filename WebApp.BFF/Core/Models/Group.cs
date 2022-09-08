@@ -5,13 +5,13 @@
         public string Id { get; set; }
         public string Name { get; set; }
         public List<Message> Messages { get; set; }
-        public List<UserGroup> UserGroups { get; set; }
+        public virtual List<ApplicationUser> ApplicationUsers { get; set; }
 
 
         public Group()
         {
             Messages = new List<Message>();
-            UserGroups = new List<UserGroup>();
+            ApplicationUsers = new List<ApplicationUser>();
         }
     }
 }

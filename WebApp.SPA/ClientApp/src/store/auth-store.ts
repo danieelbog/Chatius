@@ -1,15 +1,15 @@
 import { LoginDto, RegisterDto } from "./../views/Authentication/auth.service.dto";
-import { ApplicationUser } from "./../components/Chat/chat.service.dto";
+import { UserDto } from "./../components/Chat/chat.service.dto";
 import { defineStore } from "pinia";
 import { api } from "../app/initializer/vue/vue-axios";
 import { useSignalRStore } from "./signalR-store";
 
 export const useAuthStore = defineStore("auth", {
 	state: () => ({
-		applicationUser: null as unknown as ApplicationUser,
+		applicationUser: null as unknown as UserDto,
 	}),
 	actions: {
-		setApplicationUser(applicationUser: ApplicationUser) {
+		setApplicationUser(applicationUser: UserDto) {
 			this.applicationUser = applicationUser;
 		},
 		isAuthenticated(): boolean {

@@ -22,6 +22,21 @@ namespace WebApp.BFF.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ApplicationUserGroup", b =>
+                {
+                    b.Property<string>("ApplicationUsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("GroupsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ApplicationUsersId", "GroupsId");
+
+                    b.HasIndex("GroupsId");
+
+                    b.ToTable("ApplicationUserGroup");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -265,6 +280,10 @@ namespace WebApp.BFF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
@@ -274,19 +293,19 @@ namespace WebApp.BFF.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("WebApp.BFF.Core.Models.UserGroup", b =>
+            modelBuilder.Entity("ApplicationUserGroup", b =>
                 {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasOne("WebApp.BFF.Core.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ApplicationUserId", "GroupId");
-
-                    b.HasIndex("GroupId");
-
-                    b.ToTable("UserGroups");
+                    b.HasOne("WebApp.BFF.Core.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -370,39 +389,16 @@ namespace WebApp.BFF.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("WebApp.BFF.Core.Models.UserGroup", b =>
-                {
-                    b.HasOne("WebApp.BFF.Core.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApp.BFF.Core.Models.Group", "Group")
-                        .WithMany("UserGroups")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("WebApp.BFF.Core.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Connections");
 
                     b.Navigation("Messages");
-
-                    b.Navigation("UserGroups");
                 });
 
             modelBuilder.Entity("WebApp.BFF.Core.Models.Group", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }

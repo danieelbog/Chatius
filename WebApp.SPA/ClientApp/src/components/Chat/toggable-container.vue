@@ -9,7 +9,7 @@
 	>
 		<header class="bg-light rounded-top border" @click="toggleContainer()">
 			<div class="d-flex justify-content-between p-2">
-				<div class="d-flex align-items-center">
+				<div class="d-flex align-items-center overflow-hidden">
 					<slot name="headerContent"></slot>
 				</div>
 				<div class="d-flex justify-content-between">

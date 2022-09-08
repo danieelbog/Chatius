@@ -42,7 +42,8 @@ namespace WebApp.BFF.Controllers
                 return BadRequest();
 
             await _signInManager.SignInAsync(applicationUser, false);
-            return Ok(applicationUser);
+            var userDto = new UserDto(applicationUser.UserName, applicationUser.Email);            
+            return Ok(userDto);
         }
 
         [HttpPost]
@@ -56,7 +57,9 @@ namespace WebApp.BFF.Controllers
             var result =  await _signInManager.PasswordSignInAsync(applicationUser, loginDto.Password, false, false);
             if (!result.Succeeded)
                 return BadRequest();
-            return Ok(applicationUser);
+
+            var userDto = new UserDto(applicationUser.UserName, applicationUser.Email);
+            return Ok(userDto);
         }
 
         [HttpPost]

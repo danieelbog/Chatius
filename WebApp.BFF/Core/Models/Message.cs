@@ -1,4 +1,6 @@
-﻿namespace WebApp.BFF.Core.Models
+﻿using System.Text.Json.Serialization;
+
+namespace WebApp.BFF.Core.Models
 {
     public class Message
     {
@@ -7,5 +9,6 @@
         public ApplicationUser Author { get; set; }
         public string GroupId { get; set; }
         public Group Group { get; set; }
+        public string Text { get; set; }
     }
 }

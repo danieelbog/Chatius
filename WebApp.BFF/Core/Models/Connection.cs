@@ -1,4 +1,6 @@
-﻿namespace WebApp.BFF.Core.Models
+﻿using System.Text.Json.Serialization;
+
+namespace WebApp.BFF.Core.Models
 {
     public class Connection
     {

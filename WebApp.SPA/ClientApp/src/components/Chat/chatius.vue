@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
-import { ChatGroup } from "./chat.service.dto";
+import { GroupDto } from "./chat.service.dto";
 
 import ChatBoxContainer from "./chat-box-container.vue";
 import ConversationContainer from "./conversation-container.vue";
@@ -57,8 +57,8 @@ export default defineComponent({
 		},
 	},
 	setup(props, context) {
-		const selectedChatGroup = ref(null as unknown as ChatGroup);
-		function addSelected(chatGroup: ChatGroup) {
+		const selectedChatGroup = ref(null as unknown as GroupDto);
+		function addSelected(chatGroup: GroupDto) {
 			selectedChatGroup.value = chatGroup;
 		}
 

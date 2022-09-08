@@ -84,7 +84,16 @@ app.UseAuthorization();
 app.MapDefaultControllerRoute();
 app.MapHub<ChatHub>("/hub");
 
-app.Run();
 
 
+
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+
+    throw ex;
+}
 #endregion
