@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.BFF.Database;
 
@@ -11,9 +12,10 @@ using WebApp.BFF.Database;
 namespace WebApp.BFF.Migrations
 {
     [DbContext(typeof(ChatiusContext))]
-    partial class ChatiusContextModelSnapshot : ModelSnapshot
+    [Migration("20220909073040_addCreateDateToMessage")]
+    partial class addCreateDateToMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -10,5 +10,6 @@ namespace WebApp.BFF.Core.Models
         public string GroupId { get; set; }
         public Group Group { get; set; }
         public string Text { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

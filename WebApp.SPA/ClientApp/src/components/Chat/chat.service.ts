@@ -1,6 +1,5 @@
 import { api } from "@/app/initializer/vue/vue-axios";
 import { MessageDto, UserDto, GroupDto } from "./chat.service.dto";
-var uuid = require("uuid");
 
 export async function getUsers(): Promise<Array<UserDto>> {
 	return (await api.get("/getUsers")).data;

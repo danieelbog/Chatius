@@ -87,11 +87,14 @@ export default defineComponent({
 
 		const chatBoxes = ref([] as Array<any>);
 		function showOrExpandIncomingChatGroup(newSelectedChatGroup: GroupDto) {
-			console.log("group", newSelectedChatGroup);
-			var incomingChatGroupIndex = getIndexOf(
-				newSelectedChatGroup,
-				activeChatGroups.value,
-			);
+			var incomingChatGroupIndex = -1;
+			for (let index = 0; index < activeChatGroups.value.length; index++) {
+				if (activeChatGroups.value[index].id == newSelectedChatGroup.id) {
+					incomingChatGroupIndex = index;
+					break;
+				}
+			}
+
 			if (incomingChatGroupIndex < 0) {
 				if (allowedNumberOfChatGroups.value < activeChatGroups.value.length)
 					removeChatBoxes();
@@ -102,22 +105,6 @@ export default defineComponent({
 					.expand();
 			}
 			resetActiveChatBox();
-		}
-
-		function getIndexOf(
-			newSelectedChatGroup: GroupDto,
-			activeChatGroups: Array<GroupDto>,
-		): number {
-			for (let i = 0; i < activeChatGroups.length; i++) {
-				const activeChatGroup = activeChatGroups[i];
-				if (
-					activeChatGroup.members.every((memberId) =>
-						newSelectedChatGroup.members.includes(memberId),
-					)
-				)
-					return i;
-			}
-			return -1;
 		}
 
 		function removeChatBoxes() {

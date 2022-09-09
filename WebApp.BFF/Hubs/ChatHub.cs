@@ -191,7 +191,8 @@ namespace WebApp.BFF.Hubs
                     AuthorId = currentUserId,
                     Group = group,
                     GroupId = incomingMessageDto.GroupId,
-                    Text = incomingMessageDto.Text
+                    Text = incomingMessageDto.Text,
+                    CreationDate = DateTime.Now
                 };
 
                 group.Messages.Add(message);
@@ -201,15 +202,13 @@ namespace WebApp.BFF.Hubs
                 var userDto = new UserDto(currentUser.UserName, currentUser.Email);
                 var messageDto = new MessageDto(Guid.NewGuid().ToString(), userDto, incomingMessageDto.GroupId, incomingMessageDto.Text);
 
-                var ids = group.ApplicationUsers.Where(au => au.Id != currentUserId).Select(au => au.Id);
+                var ids = group.ApplicationUsers.Select(au => au.Id);
                 await Clients.Users(ids).SendAsync("recievedMessage", messageDto);
             }
             catch (Exception ex)
             {
                 throw;
             }
-
-
         }
     }
 }

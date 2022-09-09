@@ -31,13 +31,13 @@
 					<div class="">
 						<div v-for="chatMessage in chatMessages" :key="chatMessage.id">
 							<div
-								v-if="chatMessage.authorId != 'other'"
+								v-if="chatMessage.author.userName == currentUserUsername"
 								class="bg-warning"
 							>
-								{{ chatMessage.content }}
+								{{ chatMessage.text }}
 							</div>
 							<div v-else class="bg-danger">
-								{{ chatMessage.content }}
+								{{ chatMessage.text }}
 							</div>
 						</div>
 					</div>
@@ -138,11 +138,12 @@ export default defineComponent({
 			() => eventStore,
 			(newEvent) => {
 				if (newEvent.eventName != "recievedMessage") return;
-				console.log(`${eventStore.args.text}`);
+				chatMessages.value.push(eventStore.args);
 			},
 			{ deep: true },
 		);
 
+		const currentUserUsername = ref(authStore.applicationUser.userName);
 		return {
 			chatMessages: chatMessages,
 			scrollToElement: scrollToElement,
@@ -153,6 +154,7 @@ export default defineComponent({
 			getChatGroupName: getChatGroupName,
 			chatInput,
 			sendMessage,
+			currentUserUsername: currentUserUsername,
 		};
 	},
 });

@@ -22,6 +22,7 @@ namespace WebApp.BFF.Controllers
                 .Include(m => m.Author)
                 .Include(m => m.Group)
                 .Where(m => m.GroupId == groupId)
+                .OrderBy(m => m.CreationDate)
                 .ToListAsync();
 
             var messagesDto = new List<MessageDto>();
@@ -31,7 +32,7 @@ namespace WebApp.BFF.Controllers
             foreach (var message in messages)
             {
                 var authorDto = new UserDto(message.Author.UserName, message.Author.Email);
-                var messageDto = new MessageDto(message.Id, authorDto, groupId);
+                var messageDto = new MessageDto(message.Id, authorDto, groupId, message.Text);
                 messagesDto.Add(messageDto);
             }
 

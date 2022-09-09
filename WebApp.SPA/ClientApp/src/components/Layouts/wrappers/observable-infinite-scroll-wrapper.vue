@@ -1,6 +1,5 @@
 <template>
 	<div
-		v-if="showObservable"
 		class="observable-infiinite-scroll-wrapper d-flex overflow-auto"
 		:class="{
 			'flex-column-reverse': isColumnReverse,
@@ -8,10 +7,10 @@
 		}"
 	>
 		<slot name="default"></slot>
-		<observable-wrapper @intersect="intersect()"></observable-wrapper>
-	</div>
-	<div v-else>
-		<slot name="default"></slot>
+		<observable-wrapper
+			v-if="showObservable"
+			@intersect="intersect()"
+		></observable-wrapper>
 	</div>
 </template>
 
