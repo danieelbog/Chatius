@@ -3,8 +3,7 @@
 		:showHideButton="true"
 		:height="height"
 		:width="width"
-		:toggableContainerLeftMaring="chatBoxLeftMaring"
-		:toggableContainerRightMaring="chatBoxRightMaring"
+		:toggableContainerMargin="chatBoxMargin"
 		@hideContainer="hideChatBox()"
 		ref="toggableContainer"
 	>
@@ -19,7 +18,7 @@
 				/>
 				<div class="status rounded-circle bg-success"></div>
 			</div>
-			<div class="ms-2">{{ getChatGroupName(chatGroup) }}</div>
+			<div class="ps-2">{{ getChatGroupName() }}</div>
 		</template>
 		<template v-slot:mainContent>
 			<observable-infinite-scroll-wrapper
@@ -28,22 +27,27 @@
 				:showObservable="false"
 			>
 				<template>
-					<div class="">
-						<div v-for="chatMessage in chatMessages" :key="chatMessage.id">
-							<div
-								v-if="chatMessage.author.userName == currentUserUsername"
-								class="bg-warning"
-							>
-								{{ chatMessage.text }}
-							</div>
-							<div v-else class="bg-danger">
-								{{ chatMessage.text }}
-							</div>
+					<div class="pt-2 pb-2">
+						<div
+							class="d-flex"
+							:class="{
+								'justify-content-end': isSentByMe(chatMessage),
+								'justify-content-start': !isSentByMe(chatMessage),
+							}"
+							v-for="chatMessage in chatMessages"
+							:key="chatMessage.id"
+						>
+							<chat-message
+								:message="chatMessage"
+								:isSentByMe="isSentByMe(chatMessage)"
+							></chat-message>
 						</div>
 					</div>
 				</template>
 			</observable-infinite-scroll-wrapper>
-			<div class="p-2 fixed-bottom">
+		</template>
+		<template v-slot:afterMainContent>
+			<div class="p-2 mt-auto border-top">
 				<div class="d-flex justify-content-around">
 					<input type="text" v-model="chatInput" />
 					<button class="btn p-2" @click="sendMessage()">Send</button>
@@ -62,9 +66,10 @@ import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infi
 import { useAuthStore } from "../../store/auth-store";
 import { useSignalRStore } from "../../store/signalR-store";
 import { useEventStore } from "../../store/event-store";
+import ChatMessage from "./chat-message.vue";
 
 export default defineComponent({
-	components: { toggableContainer, ObservableInfiniteScrollWrapper },
+	components: { toggableContainer, ObservableInfiniteScrollWrapper, ChatMessage },
 	props: {
 		chatGroup: {
 			type: Object as () => GroupDto,
@@ -81,12 +86,7 @@ export default defineComponent({
 			required: false,
 			default: "310px",
 		},
-		chatBoxLeftMaring: {
-			type: String,
-			required: false,
-			default: "0px",
-		},
-		chatBoxRightMaring: {
+		chatBoxMargin: {
 			type: String,
 			required: false,
 			default: "0px",
@@ -113,13 +113,13 @@ export default defineComponent({
 		}
 
 		const authStore = useAuthStore();
-		function getChatGroupName(group: GroupDto): string {
-			var friendName = "";
-			group.members.forEach((member: UserDto) => {
+		function getChatGroupName(): string {
+			var groupName = "";
+			props.chatGroup.members.forEach((member: UserDto) => {
 				if (member.userName != authStore.applicationUser.userName)
-					friendName += `${member.userName}`;
+					groupName += `${member.userName}`;
 			});
-			return friendName;
+			return groupName;
 		}
 
 		const chatInput = ref(null as unknown as string);
@@ -131,6 +131,7 @@ export default defineComponent({
 				text: chatInput.value,
 			} as MessageDto;
 			signalRStore.connection.invoke("SendMessageTo", messageDto);
+			chatInput.value = "";
 		}
 
 		const eventStore = useEventStore();
@@ -138,23 +139,27 @@ export default defineComponent({
 			() => eventStore,
 			(newEvent) => {
 				if (newEvent.eventName != "recievedMessage") return;
+				if (eventStore.args.groupId != props.chatGroup.id) return;
 				chatMessages.value.push(eventStore.args);
 			},
 			{ deep: true },
 		);
 
-		const currentUserUsername = ref(authStore.applicationUser.userName);
+		function isSentByMe(message: MessageDto): boolean {
+			return message.author.userName == authStore.applicationUser.userName;
+		}
+
 		return {
-			chatMessages: chatMessages,
-			scrollToElement: scrollToElement,
-			toggableContainer: toggableContainer,
-			loadChatMessages: loadChatMessages,
-			hideChatBox: hideChatBox,
-			expand: expand,
-			getChatGroupName: getChatGroupName,
+			chatMessages,
+			scrollToElement,
+			toggableContainer,
+			loadChatMessages,
+			hideChatBox,
+			expand,
+			getChatGroupName,
 			chatInput,
 			sendMessage,
-			currentUserUsername: currentUserUsername,
+			isSentByMe,
 		};
 	},
 });

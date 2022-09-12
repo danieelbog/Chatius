@@ -1,13 +1,13 @@
 <template>
 	<div
-		class="toggable-container-overlay shadow rounded-top bg-light"
+		class="toggable-container-overlay shadow rounded-top bg-light border"
 		:class="{
 			'toggable-container-is-expanded': expanded,
 			'toggable-container-is-minimized': !expanded,
 		}"
 		ref="toggableContainer"
 	>
-		<header class="bg-light rounded-top border" @click="toggleContainer()">
+		<header class="bg-light rounded-top border-bottom" @click="toggleContainer()">
 			<div class="d-flex justify-content-between p-2">
 				<div class="d-flex align-items-center overflow-hidden">
 					<slot name="headerContent"></slot>
@@ -37,6 +37,7 @@
 		</header>
 		<slot name="beforeMainContent"></slot>
 		<slot name="mainContent"></slot>
+		<slot name="afterMainContent"></slot>
 	</div>
 </template>
 
@@ -66,12 +67,7 @@ export default defineComponent({
 			required: false,
 			default: "288px",
 		},
-		toggableContainerLeftMaring: {
-			type: String,
-			required: false,
-			default: "0px",
-		},
-		toggableContainerRightMaring: {
+		toggableContainerMargin: {
 			type: String,
 			required: false,
 			default: "0px",
@@ -103,9 +99,7 @@ export default defineComponent({
 			toggableContainer.value.style.height = props.height;
 			toggableContainer.value.style.width = props.width;
 			toggableContainer.value.style.flex = `$0 0 ${props.width}`;
-			toggableContainer.value.style.marginRight =
-				props.toggableContainerRightMaring;
-			toggableContainer.value.style.marginLeft = props.toggableContainerLeftMaring;
+			toggableContainer.value.style.marginRight = props.toggableContainerMargin;
 		}
 
 		onMounted(() => {
@@ -117,12 +111,12 @@ export default defineComponent({
 		}
 
 		return {
-			toggableContainer: toggableContainer,
-			expanded: expanded,
-			toggleContainer: toggleContainer,
-			hideContainer: hideContainer,
-			expand: expand,
-			minimize: minimize,
+			toggableContainer,
+			expanded,
+			toggleContainer,
+			hideContainer,
+			expand,
+			minimize,
 		};
 	},
 });

@@ -36,14 +36,13 @@ namespace WebApp.BFF.Controllers
                 if (!groups.Any())
                     return Ok(groupsDto);
 
-                var members = new List<UserDto>();
                 foreach (var group in groups)
                 {
+                    var members = new List<UserDto>();
                     foreach (var user in group.ApplicationUsers)
                     {
                         var member = new UserDto(user.UserName, user.Email);
-                        if (member != null)
-                            members.Add(member);
+                        members.Add(member);
                     }
 
                     var groupDto = new GroupDto(group.Id, group.Name, members);

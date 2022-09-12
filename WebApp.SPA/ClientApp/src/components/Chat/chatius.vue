@@ -21,10 +21,8 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
 import { GroupDto } from "./chat.service.dto";
-
 import ChatBoxContainer from "./chat-box-container.vue";
 import ConversationContainer from "./conversation-container.vue";
-import { useEventStore } from "../../store/event-store";
 import "./chatius.scss";
 
 export default defineComponent({
@@ -40,12 +38,12 @@ export default defineComponent({
 			required: false,
 			default: 288,
 		},
-		chatBoxLeftMaring: {
+		conversationMargin: {
 			type: Number,
 			required: false,
 			default: 4,
 		},
-		chatBoxRightMaring: {
+		chatBoxMargin: {
 			type: Number,
 			required: false,
 			default: 4,
@@ -63,8 +61,8 @@ export default defineComponent({
 		}
 
 		return {
-			selectedChatGroup: selectedChatGroup,
-			addSelected: addSelected,
+			selectedChatGroup,
+			addSelected,
 		};
 	},
 });

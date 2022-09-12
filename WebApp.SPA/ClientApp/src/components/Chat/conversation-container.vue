@@ -14,9 +14,7 @@
 			<div class="ms-2">Messaging</div>
 		</template>
 		<template v-slot:beforeMainContent>
-			<div class="bg-light container-fluid border border-top-0 p-2">
-				Search here
-			</div>
+			<div class="bg-light container-fluid p-2">Search here</div>
 		</template>
 		<template v-slot:mainContent>
 			<observable-infinite-scroll-wrapper @intersect="LoadChatGroups()">
@@ -93,11 +91,11 @@ export default defineComponent({
 		}
 
 		return {
-			groups: groups,
-			selectedChatGroup: selectedChatGroup,
-			LoadChatGroups: LoadChatGroups,
-			addSelected: addSelected,
-			getChatGroupName: getChatGroupName,
+			groups,
+			selectedChatGroup,
+			LoadChatGroups,
+			addSelected,
+			getChatGroupName,
 		};
 	},
 });

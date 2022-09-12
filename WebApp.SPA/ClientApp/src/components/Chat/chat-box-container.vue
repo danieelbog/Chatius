@@ -1,12 +1,11 @@
 <template>
-	<div class="chat-box-container">
+	<div class="chat-box-container" ref="chatBoxContainer">
 		<chat-box
 			:chatGroup="chatGroup"
 			v-for="chatGroup in activeChatGroups"
 			:key="chatGroup.id"
 			:width="chatBoxWidth + 'px'"
-			:chatBoxLeftMaring="chatBoxLeftMaring + 'px'"
-			:chatBoxRightMaring="chatBoxRightMaring + 'px'"
+			:chatBoxMargin="chatBoxMargin + 'px'"
 			@hideChatBox="removeChatBox"
 			ref="chatBoxes"
 		></chat-box>
@@ -39,12 +38,12 @@ export default defineComponent({
 			required: false,
 			default: 288,
 		},
-		chatBoxLeftMaring: {
+		conversationMargin: {
 			type: Number,
 			required: false,
-			default: 4,
+			default: 8,
 		},
-		chatBoxRightMaring: {
+		chatBoxMargin: {
 			type: Number,
 			required: false,
 			default: 4,
@@ -61,8 +60,8 @@ export default defineComponent({
 			floatToint(
 				window.innerWidth /
 					(props.conversationContainerWidth +
-						props.chatBoxLeftMaring +
-						props.chatBoxRightMaring +
+						props.conversationMargin +
+						props.chatBoxMargin +
 						props.chatBoxWidth),
 			);
 		const setAllowedChatBoxes = () =>
@@ -70,11 +69,18 @@ export default defineComponent({
 		const allowedNumberOfChatGroups = ref(numberOfAllowedChatBoxes());
 
 		onMounted(() => {
+			setChatBoxStyle();
 			window.addEventListener("resize", setAllowedChatBoxes);
 		});
 		onBeforeUnmount(() => {
 			window.removeEventListener("resize", setAllowedChatBoxes);
 		});
+
+		const chatBoxContainer = ref(null as unknown as HTMLElement);
+		function setChatBoxStyle() {
+			if (!chatBoxContainer) return;
+			chatBoxContainer.value.style.marginRight = props.conversationMargin + "px";
+		}
 
 		const activeChatGroups = ref([] as Array<GroupDto>);
 		watch(
@@ -127,6 +133,7 @@ export default defineComponent({
 		}
 
 		return {
+			chatBoxContainer,
 			removeChatBox: removeChatBox,
 			activeChatGroups: activeChatGroups,
 			chatBoxes: chatBoxes,
