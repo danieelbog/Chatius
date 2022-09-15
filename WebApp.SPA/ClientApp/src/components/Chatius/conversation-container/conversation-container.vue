@@ -20,13 +20,13 @@
 			<observable-infinite-scroll-wrapper @intersect="LoadChatGroups()">
 				<template>
 					<div
-						class="conversation-user p-2"
 						v-for="group in groups"
 						:key="group.id"
 						@click="addSelected(group)"
+						class="conversation-user p-2"
 					>
 						<div>
-							{{ getChatGroupName(group) }}
+							{{ group.getPresentableChatGroupName(myUserName) }}
 						</div>
 						<div>STATUS</div>
 					</div>
@@ -38,16 +38,16 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
-import { GroupDto, UserDto } from "./chat.service.dto";
-import { getChatGroup, getChatGroups } from "./chat.service";
-import ObservableInfiniteScrollWrapper from "../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
-import ChatBoxContainer from "./chat-box-container.vue";
-import ToggableContainer from "./toggable-container.vue";
+import { useEventStore } from "../../../store/event-store";
+import { useAuthStore } from "../../../store/auth-store";
+import { GroupDto } from "../services/group/group.dto";
+import { getChatGroups } from "../services/group/group.service";
+import ObservableInfiniteScrollWrapper from "../../Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
+import ToggableContainer from "../base-container/toggable-container.vue";
 import "./conversation-container.scss";
-import { useEventStore } from "../../store/event-store";
-import { useAuthStore } from "../../store/auth-store";
+
 export default defineComponent({
-	components: { ObservableInfiniteScrollWrapper, ChatBoxContainer, ToggableContainer },
+	components: { ObservableInfiniteScrollWrapper, ToggableContainer },
 	props: {
 		directionRight: {
 			type: Boolean,
@@ -81,21 +81,14 @@ export default defineComponent({
 		}
 
 		const authStore = useAuthStore();
-		function getChatGroupName(group: GroupDto): string {
-			var friendName = "";
-			group.members.forEach((member: UserDto) => {
-				if (member.userName != authStore.applicationUser.userName)
-					friendName += `${member.userName}`;
-			});
-			return friendName;
-		}
+		const myUserName = ref(authStore.applicationUser.userName);
 
 		return {
 			groups,
 			selectedChatGroup,
+			myUserName,
 			LoadChatGroups,
 			addSelected,
-			getChatGroupName,
 		};
 	},
 });

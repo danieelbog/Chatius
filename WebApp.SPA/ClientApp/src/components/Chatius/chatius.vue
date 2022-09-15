@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, watch } from "@vue/composition-api";
-import { GroupDto } from "./chat.service.dto";
-import ChatBoxContainer from "./chat-box-container.vue";
-import ConversationContainer from "./conversation-container.vue";
+import { defineComponent, ref } from "@vue/composition-api";
+import { GroupDto } from "./services/group/group.dto";
+import ChatBoxContainer from "./chat-box-container/chat-box-container.vue";
+import ConversationContainer from "./conversation-container/conversation-container.vue";
 import "./chatius.scss";
 
 export default defineComponent({

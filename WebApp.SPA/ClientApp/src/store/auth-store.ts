@@ -1,8 +1,8 @@
 import { LoginDto, RegisterDto } from "./../views/Authentication/auth.service.dto";
-import { UserDto } from "./../components/Chat/chat.service.dto";
 import { defineStore } from "pinia";
 import { api } from "../app/initializer/vue/vue-axios";
 import { useSignalRStore } from "./signalR-store";
+import { UserDto } from "@/components/Chatius/services/user/user.dto";
 
 export const useAuthStore = defineStore("auth", {
 	state: () => ({

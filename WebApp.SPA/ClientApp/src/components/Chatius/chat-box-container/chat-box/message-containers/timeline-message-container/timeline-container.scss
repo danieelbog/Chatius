@@ -1,0 +1,9 @@
+.container-timeline {
+	& .container-timeline-header {
+		font-size: 13px;
+
+		& .container-timeline-text {
+			top: 8px;
+		}
+	}
+}

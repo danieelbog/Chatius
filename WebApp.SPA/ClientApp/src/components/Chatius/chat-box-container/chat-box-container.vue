@@ -1,9 +1,9 @@
 <template>
 	<div class="chat-box-container" ref="chatBoxContainer">
 		<chat-box
-			:chatGroup="chatGroup"
 			v-for="chatGroup in activeChatGroups"
 			:key="chatGroup.id"
+			:chatGroup="chatGroup"
 			:width="chatBoxWidth + 'px'"
 			:chatBoxMargin="chatBoxMargin + 'px'"
 			@hideChatBox="removeChatBox"
@@ -19,10 +19,9 @@ import {
 	watch,
 	ref,
 	onBeforeUnmount,
-	nextTick,
 } from "@vue/composition-api";
-import { GroupDto } from "./chat.service.dto";
-import chatBox from "./chat-box.vue";
+import { GroupDto } from "../services/group/group.dto";
+import chatBox from "./chat-box/chat-box.vue";
 import "./chat-box-container.scss";
 
 export default defineComponent({
@@ -134,9 +133,9 @@ export default defineComponent({
 
 		return {
 			chatBoxContainer,
-			removeChatBox: removeChatBox,
-			activeChatGroups: activeChatGroups,
-			chatBoxes: chatBoxes,
+			activeChatGroups,
+			chatBoxes,
+			removeChatBox,
 		};
 	},
 });

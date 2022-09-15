@@ -23,18 +23,16 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "@vue/composition-api";
-
+import { getUsers } from "./dashboard.service";
+import { UserDto } from "../../components/Chatius/services/user/user.dto";
+import { useSignalRStore } from "../../store/signalR-store";
 import DashboardLeftSidebar from "./dasboard-components/dashboard-left-sidebar.vue";
 import DashboardMainConent from "./dasboard-components/dashboard-main-conent.vue";
 import DashboardRightSidebar from "./dasboard-components/dashboard-right-sidebar.vue";
 import MainNavbar from "../../components/Layouts/navbars/main-navbar.vue";
 import ObservableInfiniteScrollWrapper from "../../components/Layouts/wrappers/observable-infinite-scroll-wrapper.vue";
-import Chatius from "../../components/Chat/chatius.vue";
+import Chatius from "../../components/Chatius/chatius.vue";
 import "./dashboard.scss";
-import { getUsers } from "./dashboard.service";
-import { UserDto } from "../../components/Chat/chat.service.dto";
-import { useSignalRStore } from "../../store/signalR-store";
-import { useEventStore } from "../../store/event-store";
 
 export default defineComponent({
 	components: {
@@ -47,8 +45,6 @@ export default defineComponent({
 	},
 
 	setup(props, context) {
-		const currentPage = ref(1);
-		const nextItem = ref(1);
 		onMounted(() => {
 			loadUsers();
 		});

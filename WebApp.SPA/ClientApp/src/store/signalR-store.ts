@@ -1,8 +1,11 @@
-import { MessageDto } from "./../components/Chat/chat.service.dto";
+import { GroupDto } from "./../components/Chatius/services/group/group.dto";
+import { IGroupDto } from "./../components/Chatius/services/interfaces/IGroup";
 import * as signalR from "@microsoft/signalr";
 import { defineStore } from "pinia";
 import { api } from "../app/initializer/vue/vue-axios";
 import { useEventStore } from "./event-store";
+import { MessageDto } from "@/components/Chatius/services/message/message.dto";
+import { IMessageDto } from "@/components/Chatius/services/interfaces/IMessage";
 
 export const useSignalRStore = defineStore("signalR", {
 	state: () => ({
@@ -32,13 +35,21 @@ export const useSignalRStore = defineStore("signalR", {
 				eventStore.emitNewEvent("userRegistered", userName);
 			});
 
-			this.connection.on("addedToGroup", (userName: string) => {
+			this.connection.on("addedToGroup", (group: IGroupDto) => {
 				eventStore.clearState();
-				eventStore.emitNewEvent("addedToGroup", userName);
+				var groupDto = new GroupDto(group.id, group.name, group.members);
+				eventStore.emitNewEvent("addedToGroup", groupDto);
 			});
 
-			this.connection.on("recievedMessage", (messageDto: MessageDto) => {
+			this.connection.on("recievedMessage", (message: IMessageDto) => {
 				eventStore.clearState();
+				var messageDto = new MessageDto(
+					message.id,
+					message.author,
+					message.groupId,
+					message.text,
+					message.creationDate,
+				);
 				eventStore.emitNewEvent("recievedMessage", messageDto);
 			});
 
