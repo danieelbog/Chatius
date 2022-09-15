@@ -200,7 +200,7 @@ namespace WebApp.BFF.Hubs
                 await _dbContext.SaveChangesAsync();
 
                 var userDto = new UserDto(currentUser.UserName, currentUser.Email);
-                var messageDto = new MessageDto(Guid.NewGuid().ToString(), userDto, incomingMessageDto.GroupId, incomingMessageDto.Text);
+                var messageDto = new MessageDto(message.Id, userDto, incomingMessageDto.GroupId, message.CreationDate, incomingMessageDto.Text);
 
                 var ids = group.ApplicationUsers.Select(au => au.Id);
                 await Clients.Users(ids).SendAsync("recievedMessage", messageDto);
